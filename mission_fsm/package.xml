@@ -11,6 +11,7 @@
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
   <depend>nav_msgs</depend>
+  <depend>std_srvs</depend>
 
   <export>
     <!-- tell colcon/ros2 explicitly: I am ROS 2 / ament -->

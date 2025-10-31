@@ -6,6 +6,10 @@
 #include "std_msgs/msg/empty.hpp"
 #include "std_msgs/msg/string.hpp"
 #include "nav_msgs/msg/path.hpp"
+#include "std_msgs/msg/bool.hpp"
+#include "std_msgs/msg/int32.hpp"
+#include "std_srvs/srv/empty.hpp"
+
 
 using namespace std::chrono_literals;
 
@@ -24,32 +28,21 @@ public:
     // STATE 1: CLEARANCES SCANNER
     // if no clearances send msg here
 
-    // if clearances received:
-    // perception_sub_ = create_subscription<std_msgs::msg::String>("/perception/clearances", 10, [&](std_msgs::msg::String::SharedPtr msg)
-    //  {
-    //   received_clearances_ = msg->data;
-    //   no_clearances_ = false;
-    //   RCLCPP_INFO(get_logger(), "FSM: got clearances: %s", received_clearances_->c_str());
-    //  });
-
+    // if clearance goals received from perception
     in_topic_perception_ = declare_parameter<std::string>(
       "perception_topic", "ugv/clearance_goals_unordered");
     out_topic_nav_ = declare_parameter<std::string>(
       "nav_clearances_topic", "/perception/clearances");
 
-    perception_sub_ = create_subscription<nav_msgs::msg::Path>(
-      in_topic_perception_, 10,
-      [&](nav_msgs::msg::Path::SharedPtr msg){
+    perception_sub_ = create_subscription<nav_msgs::msg::Path>(in_topic_perception_, 10, [&](nav_msgs::msg::Path::SharedPtr msg){
         // store
         latest_path_ = *msg;
-        // received_clearances_ = msg->data;
         no_clearances_ = false;
-        RCLCPP_INFO(get_logger(), "FSM: got %zu clearances from %s",
-                    msg->poses.size(), in_topic_perception_.c_str());
+        RCLCPP_INFO(get_logger(), "FSM: got %zu clearances from %s", msg->poses.size(), in_topic_perception_.c_str());
         // FORWARD to nav pipeline right now
         if (nav_clearances_pub_) {
           nav_clearances_pub_->publish(*msg);
-          RCLCPP_INFO(get_logger(), "FSM: forwarded clearances → %s", out_topic_nav_.c_str());
+          RCLCPP_INFO(get_logger(), "FSM: forwarded clearances to %s", out_topic_nav_.c_str());
         }
 
         state_ = State::NAV_TO_GOAL;
@@ -68,7 +61,26 @@ public:
       });
 
     // STATE 3: CHECK CONDITIONS
-    // placeholder: water/soil/sun conditions
+    // tank status subscription:
+    water_low_sub_ = create_subscription<std_msgs::msg::Bool>(
+    "/water_tank/low", 10,
+    [this](std_msgs::msg::Bool::SharedPtr msg){
+        water_low_ = msg->data;
+        RCLCPP_INFO(get_logger(), "FSM: water low = %s", water_low_ ? "true" : "false");
+    });
+
+    water_level_sub_ = create_subscription<std_msgs::msg::Int32>(
+    "/water_tank/level_percent", 10,
+    [this](std_msgs::msg::Int32::SharedPtr msg){
+        water_level_percent_ = msg->data;
+        // RCLCPP_INFO(get_logger(), "FSM: water level = %d%%", water_level_percent_);
+    });
+
+    // only if you want to actively refill
+    refill_client_ = create_client<std_srvs::srv::Empty>("/water_tank/refill");
+
+
+    // placeholder: soil/sun conditions
     // will need fallback for bad conditions
 
     // STATE 4: PLANTING
@@ -175,23 +187,23 @@ private:
   // placeholder for all your sensors (water, soil, sun)
   void state_check_conditions()
   {
-    // TODO: read /water_tank/low, /soil/ok, /sun/ok, etc.
-    // for now: always OK
-    bool conditions_ok = true; // placeholder
-    // bool water_low = false;  // placeholder
+    // right now: soil/sun not implemented
+    bool soil_ok = true;
+    bool sun_ok  = true;
 
-    if (conditions_ok) {
-      RCLCPP_INFO(get_logger(), "FSM: conditions OK, go to PLANTING");
+    if (water_low_) {
+      RCLCPP_WARN(get_logger(), "FSM: water low, go to REFILL_TANK");
+      state_ = State::REFILL_TANK;
+      return;
+    } else if (soil_ok && sun_ok) {
+      RCLCPP_INFO(get_logger(), "FSM: conditions OK, PLANTING");
       state_ = State::PLANTING;
     } else {
-      RCLCPP_WARN(get_logger(), "FSM: conditions NOT OK, depends on what's wrong. Either BAD_CONDITIONS or REFILL_TANK");
-      if (water_low_) {
-        state_ = State::REFILL_TANK;
-      } else {
-        state_ = State::BAD_CONDITIONS;
-      }
+      RCLCPP_WARN(get_logger(), "FSM: other conditions bad, BAD_CONDITIONS");
+      state_ = State::BAD_CONDITIONS;
     }
-  } 
+}
+
 
   void state_bad_conditions()
   {
@@ -202,11 +214,18 @@ private:
 
   void state_refill_tank()
   {
-    // placeholder for refill logic
-    RCLCPP_INFO(get_logger(), "ENDDDD: refilling water tank...");
-    
+    // pretend we are topping up water here using Liza service code
+    if (!refill_client_->wait_for_service(0s)) {
+        RCLCPP_WARN(get_logger(), "FSM: /water_tank/refill not available yet, staying here");
+        return;
+    }
     // after refill, go to next goal
     // state_ = State::REQUEST_NEXT_GOAL;
+    auto req = std::make_shared<std_srvs::srv::Empty::Request>();
+    auto fut = refill_client_->async_send_request(req);
+    RCLCPP_INFO(get_logger(), "FSM: asked water_tank to refill, next goal");
+    water_low_ = false;  // optimistic
+    state_ = State::REQUEST_NEXT_GOAL;
   }
 
    // placeholder for planting operations
@@ -241,15 +260,17 @@ private:
 
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr  permit_next_pub_;
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr mission_status_sub_;
-//   rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr perception_pub_;
-//   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr nav_clearances_pub_;
   rclcpp::TimerBase::SharedPtr timer_;
-
-rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr perception_sub_;
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr water_low_sub_;
+  rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr water_level_sub_;
+  rclcpp::Client<std_srvs::srv::Empty>::SharedPtr       refill_client_;
+  rclcpp::Subscription<nav_msgs::msg::Path>::SharedPtr perception_sub_;
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr    nav_clearances_pub_;
 
   bool no_clearances_{false};
   bool water_low_{false};
+  int  water_level_percent_{100};
+
   // data
 //   std::optional<std::string> received_clearances_;
   std::string mission_status_;
