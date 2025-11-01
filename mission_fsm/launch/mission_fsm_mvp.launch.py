@@ -43,7 +43,8 @@ ros2 launch mission_fsm mission_fsm_mvp.launch.py \
   nav2:=true \
   use_sim_time:=true \
   auto_map:=false \
-  map_yaml:=$HOME/maps/siteA.yaml
+  map_yaml:=$(ros2 pkg prefix mission_fsm)/share/mission_fsm/maps/siteA.yaml
+
 
 '''
 
