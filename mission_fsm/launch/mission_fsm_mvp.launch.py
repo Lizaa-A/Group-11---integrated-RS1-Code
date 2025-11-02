@@ -35,7 +35,7 @@ ros2 launch mission_fsm mission_fsm_mvp.launch.py
 '''
 # ABOVE is ONLY FSM + GUI
 
-# BELOW is FULL LAUNCH WITH SIM + FSM + GUI
+# BELOW is FULL LAUNCH WITH SIM + FSM + GUI + PERCEPTION
 #this is cmd
 '''
 ros2 launch mission_fsm mission_fsm_mvp.launch.py \
@@ -141,6 +141,16 @@ def generate_launch_description():
     )
 
     # -------------------------------------------------
+    # forest clearance detector node
+    # -------------------------------------------------
+    clearance_node = Node(
+            package='forest_clearance_detector',
+            executable='rotating_clearance_detector',
+            name='rotating_clearance_detector',
+            output='screen'
+    )
+
+    # -------------------------------------------------
     # build launch description
     # -------------------------------------------------
     ld = LaunchDescription()
@@ -156,5 +166,6 @@ def generate_launch_description():
     ld.add_action(include_sim)
     ld.add_action(fsm_node)
     ld.add_action(gui_node)
+    ld.add_action(clearance_node)
 
     return ld
