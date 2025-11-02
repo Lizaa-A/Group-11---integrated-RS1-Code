@@ -34,13 +34,13 @@ public:
     permit_sub_ = create_subscription<std_msgs::msg::Empty>("/mission/permit_next", 10, [this](std_msgs::msg::Empty::SharedPtr)
     {
       permitted_ = true; // allow sending next goal
-      RCLCPP_INFO(this->get_logger(), "[permit_next] Permit received → allowed to send next goal.");
+      RCLCPP_INFO(this->get_logger(), "[permit_next] Permit received, allowed to send next goal.");
       // If we’re idle and not waiting on a current goal, try to send immediately
       if (!waiting_ && (last_status_.empty() || last_status_=="NO_GOAL" || last_status_=="AT_GOAL")) {
         send_next_if_any(); // try to send next goal
       }
     });
-    RCLCPP_INFO(get_logger(), "GoalTracker ready. expected_frame='%s', require_permission=%s", expected_frame_.c_str(), expected_frame_.c_str(), require_permission_ ? "true" : "false");
+    RCLCPP_INFO(get_logger(), "GoalTracker ready. expected_frame='%s', require_permission=%s", expected_frame_.c_str(), require_permission_ ? "true" : "false");
   }
 
 private:
@@ -116,7 +116,7 @@ private:
     }
     
     // Respect permission gate
-    if (require_permission_ && !permitted_) {
+    if (require_permission_ && !permitted_ && first_goal_sent_) {
       RCLCPP_INFO(get_logger(), "Permission required and not granted yet; not sending.");
       return;
     }
@@ -140,6 +140,7 @@ private:
   bool waiting_{false};
   bool require_permission_{true};
   bool permitted_{true};
+  bool first_goal_sent_{false};
 
   std::string expected_frame_{"map"};
   std::string last_status_;

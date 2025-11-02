@@ -115,7 +115,7 @@ private:
           RCLCPP_WARN(this->get_logger(), "Goal ABORTED.");
           publish_status("ABORTED");
           break;
-        case rclcpp_action::ResultCode::CANCELLED:
+        case rclcpp_action::ResultCode::CANCELED:
           RCLCPP_WARN(this->get_logger(), "Goal CANCELLED.");
           publish_status("CANCELLED");
           break;
