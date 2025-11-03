@@ -2,7 +2,7 @@
 
 # Need to better sync up statuses - especially with the conditon part
 '''
-ros2 launch mission_fsm mission_fsm_mvp.launch.py \
+ros2 launch mission_fsm mission_fsm_gui_ignition.launch.py \
   rviz:=true \
   nav2:=true \
   use_sim_time:=true \
@@ -30,17 +30,12 @@ def generate_launch_description():
     nav2 = LaunchConfiguration('nav2')
     auto_map = LaunchConfiguration('auto_map')
     map_yaml = LaunchConfiguration('map_yaml')
-    initpose = LaunchConfiguration('publish_initialpose')
-    require_perm = LaunchConfiguration('require_permission')
-
 
     declare_use_sim_time = DeclareLaunchArgument('use_sim_time', default_value='true', description='Use simulation time')
     declare_rviz = DeclareLaunchArgument('rviz', default_value='false', description='Launch RViz2')
     declare_nav2 = DeclareLaunchArgument('nav2', default_value='true', description='Launch Nav2 stack')
     declare_auto_map = DeclareLaunchArgument('auto_map', default_value='false', description='If true, run mapping (slam) instead of AMCL')
     declare_map_yaml = DeclareLaunchArgument('map_yaml', default_value='', description='Path to a map .yaml file for AMCL')
-    declare_initpose = DeclareLaunchArgument('publish_initialpose', default_value='true')
-    declare_permission = DeclareLaunchArgument('require_permission', default_value='true', description='If true, goal_tracker will wait for permission to send each goal except first goal')
 
     # -------------------------------------------------
     # include my existing sim / ignition bringup
@@ -66,46 +61,6 @@ def generate_launch_description():
     )
 
     # -------------------------------------------------
-    # mission nav node
-    # -------------------------------------------------
-    husky_nav_goal_share = FindPackageShare('husky_nav_goal')
-
-    include_mission_nav = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                husky_nav_goal_share,
-                'launch',
-                'mission_nav.launch.py'
-            ])
-        ),
-        launch_arguments={
-            'use_sim_time': use_sim_time,
-            'publish_initialpose': initpose,
-            'require_permission': require_perm,
-        }.items(),
-    )
-
-    # -------------------------------------------------
-    # planting and conditions node
-    # -------------------------------------------------
-    planting_conditions_share = FindPackageShare('planting_conditions')
-
-    include_planting_pipeline = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            PathJoinSubstitution([
-                planting_conditions_share,
-                'launch',
-                'planting_pipeline.launch.py'
-            ])
-        ),
-        launch_arguments={
-        #     'use_sim_time': use_sim_time,
-        #     'publish_initialpose': initpose,
-        #     'require_permission': require_perm,
-        }.items(),
-    )
-
-    # -------------------------------------------------
     # mission FSM nod
     # -------------------------------------------------
     fsm_node = Node(
@@ -125,15 +80,6 @@ def generate_launch_description():
         output='screen'
     )
 
-    # -------------------------------------------------
-    # forest clearance detector node, might have to change this later to be pkg if adding costmap stuff into forest_clearance_detector
-    # -------------------------------------------------
-    clearance_node = Node(
-            package='forest_clearance_detector',
-            executable='rotating_clearance_detector',
-            name='rotating_clearance_detector',
-            output='screen'
-    )
 
     # -------------------------------------------------
     # build launch description
@@ -146,15 +92,10 @@ def generate_launch_description():
     ld.add_action(declare_nav2)
     ld.add_action(declare_auto_map)
     ld.add_action(declare_map_yaml)
-    ld.add_action(declare_initpose)
-    ld.add_action(declare_permission)
 
     # included sim + my nodes
     ld.add_action(include_sim)
     ld.add_action(fsm_node)
     ld.add_action(gui_node)
-    ld.add_action(clearance_node)
-    ld.add_action(include_mission_nav)
-    ld.add_action(include_planting_pipeline)
 
     return ld
