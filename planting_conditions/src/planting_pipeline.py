@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import rclpy, asyncio
 from rclpy.node import Node
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, String
 from std_srvs.srv import Trigger
 import asyncio
 
@@ -32,10 +32,25 @@ class PlantingPipeline(Node):
         self.cover_cli     = self.create_client(Trigger, '/cover/start')
         self.irrigate_cli  = self.create_client(Trigger, '/irrigate/start')
         self.done_pub = self.create_publisher(Bool, '/mission/planting_done', 10)
+        self.status_pub = self.create_publisher(String, '/mission/fsm_status', 10)
+        self._phase = None  # track last published phase to avoid spam
 
         # Kick off the async pipeline after startup
         self.timer_ = self.create_timer(0.2, self._tick)
-        # self._started = False
+        self._started = False
+
+    # ---- Status publishing
+    def _set_phase(self, phase: str):
+        # Publish status only when phase changes.
+        if self._phase != phase:
+            self._phase = phase
+            msg = String()
+            msg.data = f'FSM: {phase}'
+            self.status_pub.publish(msg)
+            self.get_logger().info(f'STATUS is {msg.data}')
+
+    def _clear_phase(self):
+        self._phase = None  # nothing published here; next _set_phase will fire
 
     # ---- Topic callbacks
     def _on_goal_received(self, msg: Bool):
@@ -113,6 +128,7 @@ class PlantingPipeline(Node):
             await self._wait_for(lambda: self.goal_received_, '/mission/goal_received == true')
 
             # 1) Start soil prep
+            self._set_phase('CHECKING CONDITIONS')
             await self._call_trigger(self.soil_prep_cli, '/soil_prep/start')
 
             # 2) Wait for either reject or ready_to_plant
@@ -120,21 +136,26 @@ class PlantingPipeline(Node):
             while rclpy.ok():
                 if self.rejected_:
                     self.get_logger().warn('Pipeline abort: soil rejected.')
+                    self._set_phase('BAD CONDITIONS')
                     return
                 if self.ready_to_plant_:
                     break
                 await asyncio.sleep(0.1)
+            # self._set_phase('RAKING')
             self.get_logger().info('Soil accepted → continue.')
 
             # 3) Start planting and wait for done
+            self._set_phase('SEEDING')
             await self._call_trigger(self.plant_cli, '/plant/start')
             await self._wait_for(lambda: self.plant_done_, 'plant done')
 
             # 4) Start cover and wait for done
+            self._set_phase('COVERING')
             await self._call_trigger(self.cover_cli, '/cover/start')
             await self._wait_for(lambda: self.cover_done_, 'cover done')
 
             # 5) Start irrigation and wait for done
+            self._set_phase('IRRIGATING')
             await self._call_trigger(self.irrigate_cli, '/irrigate/start')
             await self._wait_for(lambda: self.irrigate_done_, 'irrigation done')
 
@@ -158,6 +179,7 @@ class PlantingPipeline(Node):
         self.cover_done_ = False
         self.irrigate_done_ = False
         self.running_ = False
+        self._clear_phase()
         self.get_logger().info('Pipeline: reset, waiting for next /mission/goal_received')
 
 

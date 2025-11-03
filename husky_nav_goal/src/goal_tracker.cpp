@@ -24,6 +24,7 @@ public:
     path_pub_ = create_publisher<nav_msgs::msg::Path>("/mission/waypoints_viz", 10);
 
     // Subscriptions with qos because transient_local for path (to get last published path if node restarts)
+    // auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable().transient_local();
     auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).reliable();
 
     // Inputs for path and status
@@ -31,6 +32,7 @@ public:
     status_sub_ = create_subscription<std_msgs::msg::String>("/mission/status", qos, std::bind(&GoalTracker::on_status, this, std::placeholders::_1));
 
     // Permit gate for sending next goal
+    // THIS MAY BE ISSUE: auto qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().transient_local();
     permit_sub_ = create_subscription<std_msgs::msg::Empty>("/mission/permit_next", 10, [this](std_msgs::msg::Empty::SharedPtr)
     {
       permitted_ = true; // allow sending next goal

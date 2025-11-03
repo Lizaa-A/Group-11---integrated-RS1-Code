@@ -5,6 +5,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/bool.hpp"
+#include "std_msgs/msg/string.hpp"
 #include "std_msgs/msg/int32.hpp"
 #include "std_srvs/srv/trigger.hpp"
 #include "geometry_msgs/msg/twist.hpp"
@@ -53,6 +54,9 @@ public:
         last_sunlight_stamp_ = now();
         have_sunlight_       = true;
       });
+
+    // to show raking status
+    fsm_status_pub_ = create_publisher<std_msgs::msg::String>("/mission/fsm_status", 10);
 
     // ---------------- Publishers ----------------
     cmd_pub_       = create_publisher<geometry_msgs::msg::Twist>(cmd_vel_topic_, 10);
@@ -223,6 +227,9 @@ private:
       }
 
       case State::RAKING: {
+        // need to say raking state here:
+        fsm_status_pub_->publish(std_msgs::msg::String().set__data("FSM: RAKING"));
+        
         if (!rake_started_) {
           rake_started_ = true;
           rake_segment_end_ = t + rclcpp::Duration::from_seconds(rake_seg_time_s_);
@@ -332,6 +339,7 @@ private:
   rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr       sun_block_pub_;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr      start_srv_, reset_srv_;
   rclcpp::TimerBase::SharedPtr                            timer_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr fsm_status_pub_;
 };
 
 int main(int argc, char** argv){

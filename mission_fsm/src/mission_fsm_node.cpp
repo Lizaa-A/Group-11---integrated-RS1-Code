@@ -21,20 +21,16 @@ class MissionFsmNode : public rclcpp::Node
 public:
   MissionFsmNode() : Node("mission_fsm")
   {
-    // -------------------------------------------------------
-    // SUBSCRIPTIONS and PUBLISHERS
-    // -------------------------------------------------------  
+    // --------------------------- SUBSCRIPTIONS and PUBLISHERS ----------------------------
 
+    // ************************************************
     // STATE 1: CLEARANCES SCANNER
-    // if no clearances send msg here
-
+    // ************************************************
     // if clearance goals received from perception
     in_topic_perception_ = declare_parameter<std::string>("perception_topic", "ugv/clearance_goals_unordered");
     out_topic_nav_ = declare_parameter<std::string>("nav_clearances_topic", "/perception/clearances");
-
     perception_sub_ = create_subscription<nav_msgs::msg::Path>(in_topic_perception_, 10, [&](nav_msgs::msg::Path::SharedPtr msg)
-    {
-        // store
+    { // store
         latest_path_ = *msg;
         no_clearances_ = false;
         RCLCPP_INFO(get_logger(), "FSM: got %zu clearances from %s", msg->poses.size(), in_topic_perception_.c_str());
@@ -45,22 +41,24 @@ public:
         }
         state_ = State::NAV_TO_GOAL;
       });
-
-    // 2) publisher to the topic your nav stack expects
-    nav_clearances_pub_ = create_publisher<nav_msgs::msg::Path>(
-      out_topic_nav_, 10);
+    // publisher to the topic your nav stack expects
+    nav_clearances_pub_ = create_publisher<nav_msgs::msg::Path>(out_topic_nav_, 10);
 
 
+    // ***********************************************
     // STATE 2: NAVIGATE TO GOAL
+    // ***********************************************
     // once at goal, nav system sends status here
     mission_status_sub_ = create_subscription<std_msgs::msg::String>("/mission/status", 10, [&](std_msgs::msg::String::SharedPtr msg)
       {
         mission_status_ = msg->data;
       });
 
-    // STATE 3: CHECK CONDITIONS
-    goal_received_pub_ = create_publisher<std_msgs::msg::Bool>("/mission/goal_received", 10);
 
+    // ***********************************************
+    // STATE 3: CHECK CONDITIONS
+    // ***********************************************
+    goal_received_pub_ = create_publisher<std_msgs::msg::Bool>("/mission/goal_received", 10);
     planting_done_sub_ = create_subscription<std_msgs::msg::Bool>("/mission/planting_done", 10, [this](std_msgs::msg::Bool::SharedPtr msg)
     {
     planting_done_ = msg->data;
@@ -79,27 +77,33 @@ public:
         water_level_percent_ = msg->data;
         // RCLCPP_INFO(get_logger(), "FSM: water level = %d%%", water_level_percent_);
     });
-
     // only if you want to actively refill
     refill_client_ = create_client<std_srvs::srv::Empty>("/water_tank/refill");
-
-
     // placeholder: soil/sun conditions
     // will need fallback for bad conditions
 
+    // ***********************************************
     // STATE 4: PLANTING
+    // ***********************************************
     // once planting is complete, tell ugv to drive to next goal
     permit_next_pub_ = create_publisher<std_msgs::msg::Empty>("/mission/permit_next", 10);
 
+
+    // ***********************************************
     // ALWAYS RUNNING - GUI, TELEMETRY
+    // ***********************************************
     // placeholder for now
 
-
+    // ***********************************************
+    // STATUS updater
+    // ***********************************************
+    fsm_status_pub_ = create_publisher<std_msgs::msg::String>("/mission/fsm_status", 10);
 
     // -------------------------------------------------------
     // TIMER to tick the FSM
     // -------------------------------------------------------
     timer_ = create_wall_timer(200ms, std::bind(&MissionFsmNode::tick, this));
+    publish_status("FSM: SCAN FOR GOAL CLEARANCES");
   }
 
 private:
@@ -117,6 +121,14 @@ private:
     // NAV_NEW_TERRAIN - STRETCH
     // OBSTACLES_UNAVOIDABLE - STRETCH
   };
+
+  void publish_status(const std::string& s)
+  {
+    std_msgs::msg::String m;
+    m.data = s;
+    fsm_status_pub_->publish(m);
+  }
+
 
   void tick()
   {
@@ -155,9 +167,11 @@ private:
     if (latest_path_) {
       RCLCPP_INFO(get_logger(), "FSM: clearances received, sending to nav");
       state_ = State::NAV_TO_GOAL;
+      publish_status("FSM: NAV TO GOAL");
     } else if (no_clearances_){
       RCLCPP_WARN(get_logger(), "FSM: no clearances received");
-        state_ = State::NO_GOAL_CLEARANCES;
+      publish_status("FSM: NO GOAL CLEARANCES");
+      state_ = State::NO_GOAL_CLEARANCES;
     } else {
       RCLCPP_INFO(get_logger(), "FSM: waiting for /perception/clearances ...");
     }
@@ -185,9 +199,11 @@ private:
       // planting reset false flag
       planting_done_ = false;
       // check conditions
+      // publish_status("FSM:CHECK_CONDITIONS");
       state_ = State::CHECK_CONDITIONS;
     } else if (mission_status_ == "ABORT") {
       RCLCPP_WARN(get_logger(), "FSM: nav aborted - requesting next goal");
+      publish_status("FSM: REQUEST NEXT GOAL");
       state_ = State::REQUEST_NEXT_GOAL;
     } else {
       RCLCPP_DEBUG(get_logger(), "FSM: navigating to goal...");
@@ -203,6 +219,7 @@ private:
 
     if (water_low_) {
       RCLCPP_WARN(get_logger(), "FSM: water low, go to REFILL_TANK");
+      publish_status("FSM: REFILL TANK");
       state_ = State::REFILL_TANK;
       return;
     } else if (soil_ok && sun_ok) {
@@ -211,6 +228,7 @@ private:
     } else {
       RCLCPP_WARN(get_logger(), "FSM: other conditions bad, BAD_CONDITIONS");
       state_ = State::BAD_CONDITIONS;
+      publish_status("FSM: BAD CONDITIONS");
     }
   }
 
@@ -218,6 +236,8 @@ private:
   {
     // go to next goal if conditions bad
     state_ = State::REQUEST_NEXT_GOAL;
+    publish_status("FSM: REQUEST NEXT GOAL");
+
     RCLCPP_WARN(get_logger(), "FSM: bad conditions - going to REQUEST NEXT GOAL");
   }
 
@@ -229,12 +249,12 @@ private:
         return;
     }
     // after refill, go to next goal
-    // state_ = State::REQUEST_NEXT_GOAL;
     auto req = std::make_shared<std_srvs::srv::Empty::Request>();
     auto fut = refill_client_->async_send_request(req);
     RCLCPP_INFO(get_logger(), "FSM: asked water_tank to refill, next goal");
     water_low_ = false;  // optimistic
     state_ = State::REQUEST_NEXT_GOAL;
+    publish_status("FSM: REQUEST NEXT GOAL");
   }
 
    // placeholder for planting operations
@@ -248,10 +268,10 @@ private:
     }
     // reset for next cycle
     planting_done_ = false;
-    state_ = State::REQUEST_NEXT_GOAL;
     RCLCPP_INFO(get_logger(), "FSM: planting finished, request next goal");
     // after planting , go to next goal
     state_ = State::REQUEST_NEXT_GOAL;
+    publish_status("FSM: REQUEST NEXT GOAL");
   }
 
   // tell goal_tracker / nav to pick the next goal
@@ -267,7 +287,7 @@ private:
     // wait_start_ = now();
     mission_status_.clear();
     state_ = State::NAV_TO_GOAL;
-    // state_ = State::SCAN_FOR_GOAL_CLEARANCES;
+    publish_status("FSM: NAV TO GOAL");
   }
 
   // --------------------------------------------------------
@@ -285,7 +305,8 @@ private:
   rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr nav_clearances_pub_;
   rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr goal_received_pub_;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr planting_done_sub_;
-  
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr fsm_status_pub_;
+
   bool planting_done_{false};
   bool no_clearances_{false};
   bool water_low_{false};
