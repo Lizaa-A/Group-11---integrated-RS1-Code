@@ -112,10 +112,10 @@ private:
     SCAN_FOR_GOAL_CLEARANCES,
     NO_GOAL_CLEARANCES,
     NAV_TO_GOAL,
-    CHECK_CONDITIONS,
-    BAD_CONDITIONS, // specify what bad condition... via telemetry? more on GUI end
-    REFILL_TANK,
-    PLANTING, // will add detailed status from planting pipeline end
+    EVALUATE_CONDITIONS,// need to change this to directly be reading for bad values as it checks conditions in planting_pipeline
+    BAD_SOIL_OR_SUN, // specify what bad condition... via telemetry? more on GUI end
+    EMPTY_TANK,
+    CONDITIONS_AND_PLANTING, // will add detailed status from planting pipeline end
     REQUEST_NEXT_GOAL
     // MANUAL_PILOTING - STRETCH
     // NAV_NEW_TERRAIN - STRETCH
@@ -143,17 +143,17 @@ private:
       case State::NAV_TO_GOAL:
         state_nav_to_goal();
         break;
-      case State::CHECK_CONDITIONS:
-        state_check_conditions();
+      case State::EVALUATE_CONDITIONS:
+        state_evaluate_conditions();
         break;
-      case State::BAD_CONDITIONS:
-        state_bad_conditions();
+      case State::BAD_SOIL_OR_SUN:
+        state_bad_soil_or_sun();
         break;
-      case State::REFILL_TANK:
-        state_refill_tank();
+      case State::EMPTY_TANK:
+        state_empty_tank();
         break;
-      case State::PLANTING:
-        state_planting();
+      case State::CONDITIONS_AND_PLANTING:
+        state_conditions_and_planting();
         break;
       case State::REQUEST_NEXT_GOAL:
         state_request_next_goal();
@@ -198,9 +198,8 @@ private:
       goal_received_pub_->publish(ok);
       // planting reset false flag
       planting_done_ = false;
-      // check conditions
-      // publish_status("FSM:CHECK_CONDITIONS");
-      state_ = State::CHECK_CONDITIONS;
+      // evaluate conditions
+      state_ = State::EVALUATE_CONDITIONS;
     } else if (mission_status_ == "ABORT") {
       RCLCPP_WARN(get_logger(), "FSM: nav aborted - requesting next goal");
       publish_status("FSM: REQUEST NEXT GOAL");
@@ -211,28 +210,29 @@ private:
   }
 
   // placeholder for all your sensors (water, soil, sun)
-  void state_check_conditions()
+  void state_evaluate_conditions()
   {
     // right now: soil/sun not implemented
+    // need a way to read a bool for bad conditions in soil/sun which will get it to go to another goal
     bool soil_ok = true;
     bool sun_ok  = true;
 
     if (water_low_) {
-      RCLCPP_WARN(get_logger(), "FSM: water low, go to REFILL_TANK");
-      publish_status("FSM: REFILL TANK");
-      state_ = State::REFILL_TANK;
+      RCLCPP_WARN(get_logger(), "FSM: water low, go to EMPTY_TANK");
+      publish_status("FSM: EMPTY TANK");
+      state_ = State::EMPTY_TANK;
       return;
     } else if (soil_ok && sun_ok) {
-      RCLCPP_INFO(get_logger(), "FSM: conditions OK, PLANTING");
-      state_ = State::PLANTING;
+      RCLCPP_INFO(get_logger(), "FSM: conditions OK, CONDITIONS_AND_PLANTING");
+      state_ = State::CONDITIONS_AND_PLANTING;
     } else {
-      RCLCPP_WARN(get_logger(), "FSM: other conditions bad, BAD_CONDITIONS");
-      state_ = State::BAD_CONDITIONS;
-      publish_status("FSM: BAD CONDITIONS");
+      RCLCPP_WARN(get_logger(), "FSM: other conditions bad, BAD_SOIL_OR_SUN");
+      state_ = State::BAD_SOIL_OR_SUN;
+      publish_status("FSM: BAD SOIL OR SUN");
     }
   }
 
-  void state_bad_conditions()
+  void state_bad_soil_or_sun()
   {
     // go to next goal if conditions bad
     state_ = State::REQUEST_NEXT_GOAL;
@@ -241,7 +241,7 @@ private:
     RCLCPP_WARN(get_logger(), "FSM: bad conditions - going to REQUEST NEXT GOAL");
   }
 
-  void state_refill_tank()
+  void state_empty_tank()
   {
     // pretend we are topping up water here using Liza service code
     if (!refill_client_->wait_for_service(0s)) {
@@ -258,7 +258,7 @@ private:
   }
 
    // placeholder for planting operations
-  void state_planting()
+  void state_conditions_and_planting()
   {
     // we already told the pipeline “goal_received” in NAV_TO_GOAL
     // here we just wait for its final “planting_done”
