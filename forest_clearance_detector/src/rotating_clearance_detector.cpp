@@ -40,7 +40,7 @@ public:
     this->declare_parameter<int>("num_columns", 180);
     this->declare_parameter<double>("max_xy", 4.0);
     this->declare_parameter<double>("obstacle_z_thresh", 0.5);
-    this->declare_parameter<double>("free_range_m", 3.0);
+    this->declare_parameter<double>("free_range_m", 2.0);
     this->declare_parameter<double>("rotate_speed", 0.8);
     this->declare_parameter<double>("rotate_settle_s", 0.7);
 

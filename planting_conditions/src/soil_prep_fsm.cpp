@@ -9,10 +9,11 @@
 #include "std_msgs/msg/int32.hpp"
 #include "std_srvs/srv/trigger.hpp"
 #include "geometry_msgs/msg/twist.hpp"
+#include "std_srvs/srv/empty.hpp"
+#include "std_msgs/msg/empty.hpp" 
 
 
-
-enum class State { IDLE, PROBING, EVALUATE, RAKING, DONE };
+enum class State { IDLE, PROBING, EVALUATE, RAKING, DONE, REQUEST_NEXT_GOAL};
 
 class SoilPrepFSM : public rclcpp::Node {
 public:
@@ -37,6 +38,13 @@ public:
 
     // Freshness for moisture (existing)
     max_age_s_ = declare_parameter<double>("moisture_max_age_s", max_age_s_);
+
+    // Publish request for next goal:
+    permit_next_pub_ = create_publisher<std_msgs::msg::Empty>("/mission/permit_next", 10);
+    // Publish to status
+    fsm_status_pub_ = create_publisher<std_msgs::msg::String>("/mission/fsm_status", 10);
+    // Publish to next goal
+    done_pub_ = create_publisher<std_msgs::msg::Bool>("/mission/planting_done", 10);
 
     // ---------------- Subscriptions ----------------
     moisture_sub_ = create_subscription<std_msgs::msg::Int32>(
@@ -95,6 +103,13 @@ public:
 
 private:
   // ---------------- Core tick ----------------
+  void publish_status(const std::string& s)
+  {
+    std_msgs::msg::String m;
+    m.data = s;
+    fsm_status_pub_->publish(m);
+  }
+
   void tick() {
     const auto t = now();
 
@@ -140,7 +155,8 @@ private:
             std_msgs::msg::Bool rej; rej.data = true; reject_pub_->publish(rej);
             std_msgs::msg::Bool sb;  sb.data  = true; sun_block_pub_->publish(sb);
             stopMotion();
-            state_ = State::DONE;
+            state_ = State::REQUEST_NEXT_GOAL;
+            publish_status("FSM: BAD SUNLIGHT");
             RCLCPP_WARN(get_logger(), "Rejected: inadequate sunlight.");
             break;
           }
@@ -200,7 +216,8 @@ private:
             std_msgs::msg::Bool rej; rej.data = true; reject_pub_->publish(rej);
             std_msgs::msg::Bool sb;  sb.data  = true; sun_block_pub_->publish(sb);
             stopMotion();
-            state_ = State::DONE;
+            // state_ = State::REQUEST_NEXT_GOAL;
+            // publish_status("FSM: BAD SUNLIGHT");
             RCLCPP_WARN(get_logger(), "Rejected at evaluate: sunlight inadequate or stale (age=%.2fs).", sun_age);
             break;
           }
@@ -220,7 +237,8 @@ private:
         } else {
           std_msgs::msg::Bool rej; rej.data = true; reject_pub_->publish(rej);
           stopMotion();
-          state_ = State::DONE;
+          state_ = State::REQUEST_NEXT_GOAL;
+          publish_status("FSM: BAD SOIL");
           RCLCPP_WARN(get_logger(), "Rejected: soil unsuitable (RAW=%d < %d).", r, raw_accept_thresh_);
         }
         break;
@@ -228,7 +246,11 @@ private:
 
       case State::RAKING: {
         // need to say raking state here:
-        fsm_status_pub_->publish(std_msgs::msg::String().set__data("FSM: RAKING"));
+        static bool sent = false;              // (or make it a member: request_sent_)
+        if (!sent) {
+          publish_status("FSM: RAKING");
+          sent = true;
+        }
         
         if (!rake_started_) {
           rake_started_ = true;
@@ -261,6 +283,21 @@ private:
       }
 
       case State::DONE:
+        break;
+
+      case State::REQUEST_NEXT_GOAL:
+        static bool sent = false;              // (or make it a member: request_sent_)
+        if (!sent) {
+          publish_status("FSM: REQUESTING NEXT GOAL");
+          std_msgs::msg::Empty msg;
+          permit_next_pub_->publish(msg);
+          sent = true;
+        }
+        // using done_pub_
+        std_msgs::msg::Bool done_msg;
+        done_msg.data = true;
+        done_pub_->publish(done_msg);
+        state_ = State::IDLE;
         break;
     }
   }
@@ -340,6 +377,8 @@ private:
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr      start_srv_, reset_srv_;
   rclcpp::TimerBase::SharedPtr                            timer_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr fsm_status_pub_;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr permit_next_pub_;
+  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr       done_pub_;
 };
 
 int main(int argc, char** argv){

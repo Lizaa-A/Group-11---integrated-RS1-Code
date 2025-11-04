@@ -99,7 +99,7 @@ private:
     }
     // Publish ordered path
     out_pub_->publish(out);
-    RCLCPP_INFO(get_logger(), "Published ordered Path → %s (%zu poses).", out_topic_.c_str(), out.poses.size());
+    RCLCPP_INFO(get_logger(), "Published ordered Path of %s (%zu poses).", out_topic_.c_str(), out.poses.size());
   }
 
   // Params

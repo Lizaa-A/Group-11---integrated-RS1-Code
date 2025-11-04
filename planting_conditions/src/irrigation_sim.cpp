@@ -123,11 +123,31 @@ private:
   void tick(){
     if(!active_) return;
 
-    // stop if tank low (optional)
+    // If we are paused due to low tank, wait here until it is refilled
+    if (paused_low_) {
+      stop_motion();
+      set_flow(0);
+      if (!low_) {
+        // resume
+        if (using_time_fallback_) {
+          // extend deadline by the pause duration
+          t_end_ = t_end_ + (now() - pause_start_);
+        }
+        paused_low_ = false;
+        RCLCPP_INFO(get_logger(),"Resuming irrigation after refill.");
+      } else {
+        maybe_refill();   // optional: try auto-refill if enabled
+        return;           // stay paused
+      }
+    }
+
     if (stop_on_low_ && low_) {
-      RCLCPP_WARN(get_logger(),"Low tank during irrigation.");
-      finish(false);
-      maybe_refill();
+      RCLCPP_WARN(get_logger(),"Low tank during irrigation to pausing.");
+      paused_low_ = true;
+      pause_start_ = now();
+      stop_motion();
+      set_flow(0);
+      maybe_refill();     // optional auto-refill
       return;
     }
 
@@ -167,6 +187,9 @@ private:
   // State
   bool active_{false};
   bool low_{false};
+  bool paused_low_{false};
+  rclcpp::Time pause_start_;
+
 
   // Distance-mode state
   bool   using_time_fallback_{true};

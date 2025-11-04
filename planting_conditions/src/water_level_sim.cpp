@@ -2,6 +2,7 @@
 #include "std_msgs/msg/bool.hpp"
 #include "std_msgs/msg/int32.hpp"
 #include "std_srvs/srv/empty.hpp"
+#include "std_msgs/msg/string.hpp"
 
 #include <algorithm>
 #include <limits>
@@ -29,6 +30,9 @@ public:
 
     // Track previous "low" state to detect threshold crossings
     last_low_state_ = (level_percent_ <= low_thresh_);
+
+    // status for fsm
+    fsm_status_pub_ = create_publisher<std_msgs::msg::String>("/mission/fsm_status", 10);
 
     // ---------------------------
     // Publishers 
@@ -60,6 +64,7 @@ public:
         last_pub_level_  = std::numeric_limits<double>::quiet_NaN(); // force an immediate publish
         last_low_state_  = (level_percent_ <= low_thresh_);
         RCLCPP_INFO(this->get_logger(), "Tank refilled to 100%%");
+        publish_status("FSM: TANK REFILLED");
       });
 
     // Periodic integration/publish loop at 2 Hz
@@ -69,6 +74,12 @@ public:
   }
 
 private:
+  void publish_status(const std::string& s)
+  {
+    std_msgs::msg::String m;
+    m.data = s;
+    fsm_status_pub_->publish(m);
+  }
   // Main periodic update (runs every 0.5s)
   void tick() {
     // Compute elapsed time since last second
@@ -84,6 +95,7 @@ private:
       effective_flow = 0;
       if (!was_empty_) {
         was_empty_ = true;
+        publish_status("FSM: TANK EMPTY");
         RCLCPP_WARN(get_logger(),
           "Tank empty; auto-stopping flow. Call /water_tank/refill to resume.");
       }
@@ -143,6 +155,7 @@ private:
   rclcpp::Service<std_srvs::srv::Empty>::SharedPtr    refill_srv_;
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Time last_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr fsm_status_pub_;
 
   // parameters
   double tank_volume_l_, level_percent_, leak_lps_, low_thresh_;
