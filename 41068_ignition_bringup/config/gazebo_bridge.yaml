@@ -67,3 +67,10 @@
   ros_type_name: "sensor_msgs/msg/PointCloud2"
   gz_type_name: "ignition.msgs.PointCloudPacked"
   direction: GZ_TO_ROS
+
+# Camera: camera info
+- ros_topic_name: "/camera/camera_info"
+  gz_topic_name: "/model/husky/camera/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"   # or ignition.msgs.CameraInfo depending on your distro
+  direction: GZ_TO_ROS
