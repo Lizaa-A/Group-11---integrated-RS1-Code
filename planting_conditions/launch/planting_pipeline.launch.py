@@ -24,6 +24,26 @@ def generate_launch_description():
         }],
     )
 
+    planting_site_markers = Node(
+        package='planting_conditions',
+        executable='planting_site_markers',   # C++ node we added
+        name='planting_site_markers',
+        output='screen',
+        parameters=[{
+            'map_frame': 'map',
+            'base_frame': 'base_link',
+            'marker_topic': '/mission/site_markers',
+            'drop_on_sun_ok': True,              
+            'reject_reason_debounce_ms': 150,     
+            'sun_ok_max_age_s': 1.0,              
+            'x_size_m': 0.6,
+            'square_size_m': 0.35,
+            'circle_diam_m': 0.5,
+            'marker_z': 0.05,
+            'line_width_m': 0.05,
+        }],
+    )
+
     # 1)tank simulator always on
     water_level_sim = Node(
         package='planting_conditions',
@@ -58,6 +78,8 @@ def generate_launch_description():
             'sunlight_max_age_s': 3.0,
         }],
     )
+    
+    # delayed_soil_prep = TimerAction(period=0.5, actions=[soil_prep])
 
     planting = Node(
         package='planting_conditions',
@@ -113,7 +135,9 @@ def generate_launch_description():
     return LaunchDescription([
         declare_cmd_vel,
         sensor_bridge,         # start first
+        planting_site_markers,
         water_level_sim,
+        # delayed_soil_prep,
         soil_prep,
         planting,
         cover,
