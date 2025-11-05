@@ -91,11 +91,14 @@ private:
     // - Start from subscribed integer flow (lps)
     // - If tank is empty, force flow to 0 and warn once
     int effective_flow = flow_lps_;
+    if (level_percent_ <= 20.0) {
+      publish_status("FSM: TANK EMPTY");
+    }
     if (level_percent_ <= 0.0 && stop_when_empty_) {
       effective_flow = 0;
       if (!was_empty_) {
         was_empty_ = true;
-        publish_status("FSM: TANK EMPTY");
+        // publish_status("FSM: TANK EMPTY");
         RCLCPP_WARN(get_logger(),
           "Tank empty; auto-stopping flow. Call /water_tank/refill to resume.");
       }
@@ -106,7 +109,8 @@ private:
 
     // Integrate outflow:
     // - Ignore negative commanded flow (no filling; clamp at 0)
-    double out_lps = std::max(0, effective_flow) + leak_lps_;
+    double out      publish_status("FSM: TANK EMPTY");
+_lps = std::max(0, effective_flow) + leak_lps_;
 
     // Convert outflow over dt into % drop:
     double dlevel = (out_lps * dt) / tank_volume_l_ * 100.0;
