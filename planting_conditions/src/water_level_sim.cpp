@@ -109,8 +109,7 @@ private:
 
     // Integrate outflow:
     // - Ignore negative commanded flow (no filling; clamp at 0)
-    double out      publish_status("FSM: TANK EMPTY");
-_lps = std::max(0, effective_flow) + leak_lps_;
+    double out_lps = std::max(0, effective_flow) + leak_lps_;
 
     // Convert outflow over dt into % drop:
     double dlevel = (out_lps * dt) / tank_volume_l_ * 100.0;

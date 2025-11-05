@@ -18,6 +18,9 @@ find_package(std_srvs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 
 
 add_executable(soil_prep_fsm src/soil_prep_fsm.cpp)
@@ -38,6 +41,8 @@ ament_target_dependencies(cover_sim rclcpp std_msgs std_srvs geometry_msgs nav_m
 add_executable(irrigation_sim src/irrigation_sim.cpp)
 ament_target_dependencies(irrigation_sim rclcpp std_msgs std_srvs geometry_msgs nav_msgs)
 
+add_executable(planting_site_markers src/planting_site_markers.cpp)
+ament_target_dependencies(planting_site_markers rclcpp std_msgs geometry_msgs visualization_msgs tf2 tf2_ros tf2_geometry_msgs)
 #chmod +x src/tcp_to_ros2.py
 #chmod +x src/task_order.py
 #chmod +x src/tcp_to_ros2_sunlight.py
@@ -50,7 +55,8 @@ install(TARGETS
   soil_prep_fsm
   planting_sim           
   cover_sim              
-  irrigation_sim   
+  irrigation_sim 
+  planting_site_markers  
   DESTINATION lib/${PROJECT_NAME})
 
   install(PROGRAMS
