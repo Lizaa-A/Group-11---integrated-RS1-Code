@@ -88,6 +88,7 @@ def generate_launch_description():
 
     # args
     ld.add_action(declare_use_sim_time)
+    # ld.add_action(telemetry_node)
     ld.add_action(declare_rviz)
     ld.add_action(declare_nav2)
     ld.add_action(declare_auto_map)

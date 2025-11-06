@@ -1,0 +1,4 @@
+source;share/planting_conditions/local_setup.bash
+source;share/planting_conditions/local_setup.dsv
+source;share/planting_conditions/local_setup.sh
+source;share/planting_conditions/local_setup.zsh

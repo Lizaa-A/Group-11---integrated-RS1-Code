@@ -1,0 +1,4 @@
+[console_scripts]
+gui_dashboard = ugv_dashboard_gui.pyside6_gui.telemetry_dashboard_gui:main
+pgm_publisher = ugv_dashboard_gui.pgm_publisher:main
+

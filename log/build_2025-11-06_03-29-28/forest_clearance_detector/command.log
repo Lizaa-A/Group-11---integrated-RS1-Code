@@ -1,0 +1,1 @@
+Invoking command in '/home/student/git/41068_ws/src/rs1_2025_soil/build/forest_clearance_detector': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/opt/ros/humble /usr/bin/cmake --build /home/student/git/41068_ws/src/rs1_2025_soil/build/forest_clearance_detector -- -j8 -l8

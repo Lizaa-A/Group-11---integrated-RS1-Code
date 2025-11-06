@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>mission_fsm</name>
+  <version>0.0.1</version>
+  <description>Mission-level finite state machine for seed-planting UGV</description>
+  <maintainer email="you@example.com">Sophie</maintainer>
+  <license>BSD-3-Clause</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>std_srvs</depend>
+
+  <export>
+    <!-- tell colcon/ros2 explicitly: I am ROS 2 / ament -->
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

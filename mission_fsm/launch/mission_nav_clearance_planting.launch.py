@@ -79,6 +79,16 @@ def generate_launch_description():
     )
 
     # -------------------------------------------------
+    # telemetry Node
+    # -------------------------------------------------
+    telemetry_node = Node(
+        package='telemetry_node_pkg',                
+        executable='telemetry_node',          
+        name='telemetry_node',
+        output='screen',
+    )
+
+    # -------------------------------------------------
     # build launch description
     # -------------------------------------------------
     ld = LaunchDescription()
@@ -87,6 +97,8 @@ def generate_launch_description():
     ld.add_action(declare_use_sim_time)
     ld.add_action(declare_initpose)
     ld.add_action(declare_permission)
+    ld.add_action(telemetry_node)
+
 
     ld.add_action(clearance_node)
     ld.add_action(include_mission_nav)

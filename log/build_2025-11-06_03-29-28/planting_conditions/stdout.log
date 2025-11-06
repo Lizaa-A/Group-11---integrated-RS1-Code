@@ -1,0 +1,7 @@
+[  7%] [32mBuilding CXX object CMakeFiles/soil_prep_fsm.dir/src/soil_prep_fsm.cpp.o[0m
+[ 14%] [32mBuilding CXX object CMakeFiles/water_level_sim.dir/src/water_level_sim.cpp.o[0m
+[ 21%] [32mBuilding CXX object CMakeFiles/cover_sim.dir/src/cover_sim.cpp.o[0m
+[ 28%] [32mBuilding CXX object CMakeFiles/straight_drive.dir/src/straight_drive.cpp.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/planting_site_markers.dir/src/planting_site_markers.cpp.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/irrigation_sim.dir/src/irrigation_sim.cpp.o[0m
+[ 35%] [32mBuilding CXX object CMakeFiles/planting_sim.dir/src/planting_sim.cpp.o[0m

@@ -1,0 +1,18 @@
+[0.403s] Invoking command in '/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui': PYTHONPATH=/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/build --no-deps symlink_data
+[0.584s] running develop
+[0.695s] running egg_info
+[0.696s] writing ugv_dashboard_gui.egg-info/PKG-INFO
+[0.696s] writing dependency_links to ugv_dashboard_gui.egg-info/dependency_links.txt
+[0.696s] writing entry points to ugv_dashboard_gui.egg-info/entry_points.txt
+[0.696s] writing requirements to ugv_dashboard_gui.egg-info/requires.txt
+[0.696s] writing top-level names to ugv_dashboard_gui.egg-info/top_level.txt
+[0.697s] reading manifest file 'ugv_dashboard_gui.egg-info/SOURCES.txt'
+[0.697s] writing manifest file 'ugv_dashboard_gui.egg-info/SOURCES.txt'
+[0.698s] running build_ext
+[0.699s] Creating /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/python3.10/site-packages/ugv-dashboard-gui.egg-link (link to .)
+[0.699s] Installing gui_dashboard script to /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/ugv_dashboard_gui
+[0.699s] Installing pgm_publisher script to /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/ugv_dashboard_gui
+[0.699s] 
+[0.699s] Installed /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui
+[0.699s] running symlink_data
+[0.716s] Invoked command in '/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui' returned '0': PYTHONPATH=/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/build --no-deps symlink_data

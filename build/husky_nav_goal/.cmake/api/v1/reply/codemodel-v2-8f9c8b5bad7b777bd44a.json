@@ -1,0 +1,106 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-31f4ce900e5c152a02ba.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"name" : "",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "husky_nav_goal",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "goal_nav::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-goal_nav-7eeeb469fe4a5a2a7540.json",
+					"name" : "goal_nav",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "goal_tracker::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-goal_tracker-b12d4de6fc32020ebaea.json",
+					"name" : "goal_tracker",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "goals_markers::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-goals_markers-d45a46a56ceba83b2064.json",
+					"name" : "goals_markers",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "husky_nav_goal_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-husky_nav_goal_uninstall-b1d2bcc112d53ba7f054.json",
+					"name" : "husky_nav_goal_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tsp_clearance_goals::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tsp_clearance_goals-2f1daa98bb5380c54eb9.json",
+					"name" : "tsp_clearance_goals",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-uninstall-d935cb87e5a59720c882.json",
+					"name" : "uninstall",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/student/git/41068_ws/src/rs1_2025_soil/build/husky_nav_goal",
+		"source" : "/home/student/git/41068_ws/src/rs1_2025_soil/husky_nav_goal"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

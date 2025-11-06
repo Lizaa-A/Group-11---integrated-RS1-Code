@@ -1,0 +1,1 @@
+ament_cmake_symlink_install_targets("TARGET_FILES" "/home/student/git/41068_ws/src/rs1_2025_soil/build/forest_clearance_detector/rotating_clearance_detector" "/home/student/git/41068_ws/src/rs1_2025_soil/build/forest_clearance_detector/goals_markers" "TARGETS" "rotating_clearance_detector" "goals_markers" "DESTINATION" "lib/forest_clearance_detector")

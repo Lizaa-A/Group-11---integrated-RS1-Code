@@ -1,0 +1,18 @@
+[0.042s] Invoking command in '/home/student/git/41068_ws/src/rs1_2025_soil/build/husky_nav_goal': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/opt/ros/humble /usr/bin/cmake --build /home/student/git/41068_ws/src/rs1_2025_soil/build/husky_nav_goal -- -j8 -l8
+[0.680s] [ 12%] [32mBuilding CXX object CMakeFiles/tsp_clearance_goals.dir/src/tsp_clearance_goals.cpp.o[0m
+[0.680s] [ 25%] [32mBuilding CXX object CMakeFiles/goal_tracker.dir/src/goal_tracker.cpp.o[0m
+[0.680s] [ 37%] [32mBuilding CXX object CMakeFiles/goal_nav.dir/src/goal_nav.cpp.o[0m
+[0.680s] [ 50%] [32mBuilding CXX object CMakeFiles/goals_markers.dir/src/goals_markers.cpp.o[0m
+[4.516s] gmake[2]: *** [CMakeFiles/goals_markers.dir/build.make:76: CMakeFiles/goals_markers.dir/src/goals_markers.cpp.o] Interrupt
+[4.517s] gmake[2]: *** wait: No child processes.  Stop.
+[4.517s] gmake[2]: *** Waiting for unfinished jobs....
+[4.517s] gmake[2]: *** wait: No child processes.  Stop.
+[4.519s] gmake[1]: *** [CMakeFiles/Makefile2:143: CMakeFiles/goals_markers.dir/all] Interrupt
+[4.528s] gmake[2]: *** [CMakeFiles/goal_nav.dir/build.make:76: CMakeFiles/goal_nav.dir/src/goal_nav.cpp.o] Interrupt
+[4.528s] gmake[1]: *** [CMakeFiles/Makefile2:195: CMakeFiles/goal_nav.dir/all] Interrupt
+[4.528s] gmake[2]: *** [CMakeFiles/tsp_clearance_goals.dir/build.make:76: CMakeFiles/tsp_clearance_goals.dir/src/tsp_clearance_goals.cpp.o] Interrupt
+[4.528s] gmake[1]: *** [CMakeFiles/Makefile2:169: CMakeFiles/tsp_clearance_goals.dir/all] Interrupt
+[4.528s] gmake[1]: *** wait: No child processes.  Stop.
+[4.528s] gmake[1]: *** Waiting for unfinished jobs....
+[4.528s] gmake[1]: *** wait: No child processes.  Stop.
+[4.528s] gmake: *** [Makefile:146: all] Error 2

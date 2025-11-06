@@ -6,10 +6,15 @@ from threading import Thread
 
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import QoSProfile, DurabilityPolicy, ReliabilityPolicy
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
+from geometry_msgs.msg import Twist, PoseWithCovarianceStamped, PoseArray
+from visualization_msgs.msg import MarkerArray
 from cv_bridge import CvBridge
+import cv2
 import numpy as np
+from nav2_msgs.msg import ParticleCloud
 
 from PySide6.QtWidgets import (
     QApplication, QWidget, QStackedWidget, QPushButton, QLabel,
@@ -17,9 +22,12 @@ from PySide6.QtWidgets import (
     QProgressBar, QFrame, QFileDialog
 )
 from PySide6.QtCore import Qt, QTimer, QSize
-from PySide6.QtGui import QImage, QPixmap
-
+from PySide6.QtGui import QImage, QPixmap, QPainter, QColor
+from nav_msgs.msg import OccupancyGrid
 from .gui_format import Styles
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import subprocess
 
 # -----------------------------
 # Telemetry Listener Node
@@ -40,6 +48,7 @@ class TelemetryListener(Node):
     def callback(self, msg):
         try:
             self.telemetry_data = json.loads(msg.data)
+            print("Received telemetry:", self.telemetry_data)  
         except Exception:
             self.get_logger().warn('Invalid JSON received on /telemetry/snapshot')
 
@@ -68,6 +77,7 @@ class Header(QWidget):
         layout = QHBoxLayout()
         layout.setContentsMargins(8, 8, 8, 8)
         self.setLayout(layout)
+        self.setFixedHeight(60)
 
         self.home_btn = QPushButton("Home")
         self.home_btn.setStyleSheet(Styles.BUTTON)
@@ -77,8 +87,10 @@ class Header(QWidget):
         self.logout_btn.setStyleSheet(Styles.BUTTON)
         self.logout_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.login_screen))
 
-        self.task_status_light = QLabel("●")
+        self.task_status_light = QLabel("�")
         self.task_status_light.setStyleSheet(f"color: {Styles.TASK_LIGHT_OFF}; font-size: 16px;")
+
+
         self.task_status_label = QLabel("Task: N/A")
         self.task_status_label.setStyleSheet(Styles.LABEL)
 
@@ -99,19 +111,28 @@ class Header(QWidget):
 
         # pick a colour depending on task
         color_map = {
-            "Idle": "#cccccc",
-            "Planting": "#4CAF50",
-            "Watering": "#2196F3",
-            "Harvesting": "#FF9800",
-            "Error": "#FF4D4D"
+            "FSM - SCAN FOR GOAL CLEARANCES": "#489239",
+            "FSM - NAV TO GOAL": "#5AB647",
+            "FSM - NO GOAL CLEARANCES - PLEASE LOAD NEW MAP": "#722929",
+            "FSM - REQUESTING NEXT GOAL": "#5AB647",
+            "FSM - BAD SUNLIGHT": "#4B2412",
+            "FSM - BAD SOIL": "#4B2412",
+            "FSM - RAKING": "#945C46",
+            "FSM - TANK REFILLED": "#2196F3",
+            "FSM - TANK EMPTY": "#FF0000",
+            "FSM - CHECKING CONDITIONS": "#489239",
+            "FSM - BAD CONDITIONS": "#ff0000",
+            "FSM - SEEDING": "#945C46",
+            "FSM - COVERING": "#945C46",
+            "FSM - IRRIGATING": "#679CD8",
         }
 
-        color = color_map.get(task, "#cccccc")
+        color = color_map.get(task.strip(), "#cccccc")
+        self.task_status_light.setText("�")
+        self.task_status_light.setStyleSheet(f"color: {color}; font-size: 24px;")
+        self.task_status_light.repaint()
 
-        # ✅ update the small coloured light
-        self.task_status_light.setStyleSheet(f"background-color: {color}; border-radius: 6px;")
 
-        # ✅ update the label beside it
         self.task_status_label.setText(f"Task: {task}")
 
 
@@ -177,243 +198,162 @@ class BaseScreen(QWidget):
         self.header = Header(stacked_widget, stacked_widget.telemetry_node)
         self.layout.addWidget(self.header)
 
+
 # -----------------------------
-# Live Monitoring Screen (left sensors, right PGM)
-# -----------------------------
-# -----------------------------
-# Live Monitoring Screen (with water bar)
+# Live Monitoring Screen 
 # -----------------------------
 class LiveMonitoringScreen(BaseScreen):
     def __init__(self, telemetry_node, stacked_widget):
         super().__init__(stacked_widget)
         self.telemetry_node = telemetry_node
 
-        content_layout = QHBoxLayout()
-        content_layout.setContentsMargins(12, 12, 12, 12)
+        # ---- Layout setup ----
+        content_layout = QVBoxLayout()
+        content_layout.setContentsMargins(20, 20, 20, 20)
+        content_layout.setSpacing(20)
         self.layout.addLayout(content_layout)
 
-        # Left: sensors stack
-        left = QVBoxLayout()
-        left.setSpacing(12)
-
-        # Water row: label + status dot + progress bar + percent
-        water_label_row = QHBoxLayout()
+        # -------------------------------
+        # WATER TANK
+        # -------------------------------
+        water_row = QHBoxLayout()
         self.water_label = QLabel("Water Tank:")
         self.water_label.setStyleSheet(Styles.LABEL)
-        self.water_dot = QLabel("●")
+        self.water_dot = QLabel("�")
         self.water_dot.setStyleSheet("color: gray; font-size: 18px;")
-        water_label_row.addWidget(self.water_label)
-        water_label_row.addWidget(self.water_dot)
-        water_label_row.addStretch()
-        left.addLayout(water_label_row)
+        self.water_value = QLabel("0 L")
+        self.water_value.setStyleSheet(Styles.SECONDARY_TEXT_COLOR)
+        water_row.addWidget(self.water_label)
+        water_row.addWidget(self.water_dot)
+        water_row.addWidget(self.water_value)
+        water_row.addStretch()
+        content_layout.addLayout(water_row)
 
         self.water_bar = QProgressBar()
         self.water_bar.setRange(0, 100)
-        self.water_bar.setTextVisible(False)
-        self.water_bar.setFixedHeight(16)
-        self.water_percent = QLabel("0%")
-        self.water_percent.setStyleSheet(Styles.SECONDARY_TEXT_COLOR)
-        left.addWidget(self.water_bar)
+        self.water_bar.setTextVisible(True)
+        self.water_bar.setFormat("0%")
+        self.water_bar.setFixedHeight(18)
+        content_layout.addWidget(self.water_bar)
 
-        # Sunlight row: label + status dot
+        # -------------------------------
+        # SOIL MOISTURE
+        # -------------------------------
+        soil_row = QHBoxLayout()
+        self.soil_label = QLabel("Soil Moisture:")
+        self.soil_label.setStyleSheet(Styles.LABEL)
+        self.soil_dot = QLabel("�")
+        self.soil_dot.setStyleSheet("color: gray; font-size: 18px;")
+        self.soil_value = QLabel("0 (placeholder)")
+        self.soil_value.setStyleSheet(Styles.SECONDARY_TEXT_COLOR)
+        soil_row.addWidget(self.soil_label)
+        soil_row.addWidget(self.soil_dot)
+        soil_row.addWidget(self.soil_value)
+        soil_row.addStretch()
+        content_layout.addLayout(soil_row)
+
+        self.soil_bar = QProgressBar()
+        self.soil_bar.setRange(0, 100)
+        self.soil_bar.setTextVisible(True)
+        self.soil_bar.setFormat("0%")
+        self.soil_bar.setFixedHeight(18)
+        content_layout.addWidget(self.soil_bar)
+
+        # -------------------------------
+        # SEED WEIGHT
+        # -------------------------------
+        seed_row = QHBoxLayout()
+        self.seed_label = QLabel("Seed Weight:")
+        self.seed_label.setStyleSheet(Styles.LABEL)
+        self.seed_dot = QLabel("�")
+        self.seed_dot.setStyleSheet("color: gray; font-size: 18px;")
+        self.seed_value = QLabel("0 g")
+        self.seed_value.setStyleSheet(Styles.SECONDARY_TEXT_COLOR)
+        seed_row.addWidget(self.seed_label)
+        seed_row.addWidget(self.seed_dot)
+        seed_row.addWidget(self.seed_value)
+        seed_row.addStretch()
+        content_layout.addLayout(seed_row)
+
+        self.seed_bar = QProgressBar()
+        self.seed_bar.setRange(0, 100)
+        self.seed_bar.setTextVisible(True)
+        self.seed_bar.setFormat("0%")
+        self.seed_bar.setFixedHeight(18)
+        content_layout.addWidget(self.seed_bar)
+
+        # -------------------------------
+        # SUNLIGHT
+        # -------------------------------
         sun_row = QHBoxLayout()
         self.sun_label = QLabel("Sunlight:")
         self.sun_label.setStyleSheet(Styles.LABEL)
-        self.sun_dot = QLabel("●")
+        self.sun_dot = QLabel("�")
         self.sun_dot.setStyleSheet("color: gray; font-size: 18px;")
         sun_row.addWidget(self.sun_label)
         sun_row.addWidget(self.sun_dot)
         sun_row.addStretch()
-        left.addLayout(sun_row)
+        content_layout.addLayout(sun_row)
 
-        # Soil moisture: label + progress bar + percent
-        soil_label = QLabel("Soil Moisture:")
-        soil_label.setStyleSheet(Styles.LABEL)
-        self.soil_bar = QProgressBar()
-        self.soil_bar.setRange(0, 100)
-        self.soil_bar.setTextVisible(False)
-        self.soil_bar.setFixedHeight(16)
-        self.soil_percent = QLabel("0%")
-        self.soil_percent.setStyleSheet(Styles.SECONDARY_TEXT_COLOR)
-        left.addWidget(soil_label)
-        left.addWidget(self.soil_bar)
-
-        # Add stretch
-        left.addStretch()
-
-        # Right: PGM image display + controls
-        right = QVBoxLayout()
-        right.setSpacing(8)
-
-        # small controls: load default, optionally pick file
-        controls_row = QHBoxLayout()
-        self.load_default_btn = QPushButton("Load default map")
-        self.load_default_btn.setStyleSheet(Styles.BUTTON)
-        self.load_default_btn.clicked.connect(self.load_default_pgm)
-        self.pick_btn = QPushButton("Pick map...")
-        self.pick_btn.setStyleSheet(Styles.BUTTON)
-        self.pick_btn.clicked.connect(self.pick_pgm_file)
-        controls_row.addWidget(self.load_default_btn)
-        controls_row.addWidget(self.pick_btn)
-        controls_row.addStretch()
-        right.addLayout(controls_row)
-
-        # PGM display label
-        self.pgm_label = QLabel()
-        self.pgm_label.setFixedSize(420, 420)
-        self.pgm_label.setStyleSheet("background-color: #000; border: 1px solid #555;")
-        self.pgm_label.setAlignment(Qt.AlignCenter)
-        right.addWidget(self.pgm_label, alignment=Qt.AlignTop)
-
-        content_layout.addLayout(left, stretch=1)
-        content_layout.addLayout(right, stretch=1)
-
-        # timers
+        # -------------------------------
+        # Timer to refresh telemetry
+        # -------------------------------
         self.update_timer = QTimer()
         self.update_timer.timeout.connect(self.update_telemetry)
-        self.update_timer.start(1000)
+        self.update_timer.start(1000)  # every second
 
-        self.pgm_timer = QTimer()
-        self.pgm_timer.timeout.connect(self.update_pgm_display)
-        self.pgm_timer.start(400)
-
-        # load default on init
-        self.load_default_pgm()
-
+    # ======================================================
+    # TELEMETRY UPDATE
+    # ======================================================
     def update_telemetry(self):
         data = getattr(self.telemetry_node, "telemetry_data", {})
 
-        # ---- soil ----
-        soil = data.get("soil_moisture", {})
-        if isinstance(soil, dict):
-            soil_percent = soil.get("percent", 0.0)
-        else:
-            soil_percent = float(soil) if soil is not None else 0.0
-        soil_percent = max(0.0, min(100.0, float(soil_percent)))
-        self.soil_bar.setValue(int(soil_percent))
-        self.soil_percent.setText(f"{soil_percent:.1f}%")
-
-        # ---- water ----
+        # ----------------- WATER -----------------
         water = data.get("water_tank", {})
-        if isinstance(water, dict):
-            water_percent = water.get("level_percent", 0.0)
-            water_low = bool(water.get("low", False))
-        else:
-            water_percent = 0.0
-            water_low = False
+        water_percent = float(water.get("level_percent", 0.0))
+        water_liters = float(water.get("level_liters", 0.0))
+        water_low = bool(water.get("low", False))
 
-        # water progress bar + percent
-        self.water_bar.setValue(int(max(0, min(100, water_percent))))
-        self.water_percent.setText(f"{water_percent:.1f}%")
+        self.water_bar.setValue(int(water_percent))
+        self.water_bar.setFormat(f"{water_percent:.1f}%")
+        self.water_value.setText(f"{water_liters:.1f} L")
 
-        # water dot color
+        # water light color
         water_color = "#e74c3c" if water_low else "#2ecc71"
         self.water_dot.setStyleSheet(f"color: {water_color}; font-size: 18px;")
 
-        # ---- sunlight ----
+        # ----------------- SOIL -----------------
+        soil = data.get("soil_moisture", {})
+        soil_raw = float(soil.get("raw", 0.0))
+        soil_percent = min(100, max(0, (soil_raw / 800) * 100))
+
+        self.soil_bar.setValue(int(soil_percent))
+        self.soil_bar.setFormat(f"{soil_percent:.1f}%")
+        self.soil_value.setText(f"{soil_raw:.1f} (placeholder)")
+
+        # soil light color (below 400 = red)
+        soil_color = "#e74c3c" if soil_raw < 400 else "#2ecc71"
+        self.soil_dot.setStyleSheet(f"color: {soil_color}; font-size: 18px;")
+
+        # ----------------- SEED -----------------
+        seed = data.get("seed_weight", {})
+        seed_percent = float(seed.get("percent_full", 0.0))
+        seed_weight = float(seed.get("weight_g", 0.0))
+        seed_low = bool(seed.get("low", False))
+
+        self.seed_bar.setValue(int(seed_percent))
+        self.seed_bar.setFormat(f"{seed_percent:.1f}%")
+        self.seed_value.setText(f"{seed_weight:.1f} g")
+
+        # seed light color
+        seed_colour = "#e74c3c" if seed_low else "#2ecc71"
+        self.seed_dot.setStyleSheet(f"color: {seed_colour}; font-size: 18px;")
+
+        # ----------------- SUNLIGHT -----------------
         sun_ok = bool(data.get("sunlight_ok", False))
         sun_color = "#2ecc71" if sun_ok else "#e74c3c"
         self.sun_dot.setStyleSheet(f"color: {sun_color}; font-size: 18px;")
 
-
-    # -----------------------------
-    # PGM Loading / Display helpers
-    # -----------------------------
-    def default_pgm_path(self):
-        # base dir is package/ugv_dashboard_gui
-        base_dir = os.path.dirname(os.path.dirname(__file__))
-        return os.path.join(base_dir, "test_images", "siteA.pgm")
-
-    def load_default_pgm(self):
-        path = self.default_pgm_path()
-        if os.path.exists(path):
-            pixmap = QPixmap(path)
-            self.set_pixmap_to_label(pixmap)
-        else:
-            self.pgm_label.setText("Default image not found")
-
-    def pick_pgm_file(self):
-        # file dialog relative to package folder
-        start_dir = os.path.dirname(os.path.dirname(__file__))
-        fname, _ = QFileDialog.getOpenFileName(self, "Select PGM image", start_dir, "PGM Files (*.pgm);;All Files (*)")
-        if fname:
-            pixmap = QPixmap(fname)
-            self.set_pixmap_to_label(pixmap)
-
-    def set_pixmap_to_label(self, pixmap: QPixmap):
-        if pixmap.isNull():
-            self.pgm_label.setText("Invalid image")
-            return
-        scaled = pixmap.scaled(self.pgm_label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.pgm_label.setPixmap(scaled)
-
-    def update_pgm_display(self):
-        """If an image arrives on /pgm/image (as numpy mono8), display it."""
-        img = getattr(self.telemetry_node, "latest_image", None)
-        if img is None:
-            return
-        try:
-            h, w = img.shape
-            q_img = QImage(img.data, w, h, w, QImage.Format_Grayscale8)
-            pix = QPixmap.fromImage(q_img)
-            self.set_pixmap_to_label(pix)
-        except Exception as e:
-            print(f"[GUI] update_pgm_display error: {e}")
-
-    # -----------------------------
-    # Telemetry update
-    # -----------------------------
-    def update_telemetry(self):
-        data = getattr(self.telemetry_node, "telemetry_data", {})
-
-        # ----------------- Soil -----------------
-        soil = data.get("soil_moisture", {})
-        if isinstance(soil, dict):
-            soil_percent = soil.get("percent", 0.0)
-            soil_raw = soil.get("raw", 0.0)
-        else:
-            soil_percent = float(soil) if soil is not None else 0.0
-            soil_raw = soil_percent
-
-        soil_percent = max(0.0, min(100.0, soil_percent))
-        self.soil_bar.setValue(int(soil_percent))
-        self.soil_bar.setFormat(f"{soil_percent:.1f}%")  # Show % inside the bar
-        self.soil_bar.setTextVisible(True)
-
-        # Optional: update label above bar
-        self.soil_label.setText(f"Soil: {soil_raw:.1f} (Raw)")
-
-        # ----------------- Water -----------------
-        water = data.get("water_tank", {})
-        if isinstance(water, dict):
-            water_percent = water.get("level_percent", 0.0)
-            water_liters = water.get("level_liters", 0.0)
-            water_low = bool(water.get("low", False))
-        else:
-            water_percent = 0.0
-            water_liters = 0.0
-            water_low = False
-
-        water_percent = max(0.0, min(100.0, water_percent))
-        self.water_bar.setValue(int(water_percent))
-        self.water_bar.setFormat(f"{water_percent:.1f}%")  # Show % inside bar
-        self.water_bar.setTextVisible(True)
-
-        # Water dot color
-        if water_low:
-            water_color = "#e74c3c"  # red
-        else:
-            water_color = "#2ecc71" if water_percent > 0 else "gray"
-        self.water_dot.setStyleSheet(f"color: {water_color}; font-size: 18px;")
-
-        # Water label above bar
-        self.water_label.setText(f"Water: {water_liters:.1f} L")
-
-        # ----------------- Sunlight -----------------
-        sun = data.get("sunlight_ok", False)
-        sun_ok = bool(sun)
-        sun_color = "#2ecc71" if sun_ok else "#e74c3c"
-        self.sun_dot.setStyleSheet(f"color: {sun_color}; font-size: 18px;")
 
 
 
@@ -427,19 +367,258 @@ class RobotsScreen(BaseScreen):
         label.setAlignment(Qt.AlignCenter)
         self.layout.addWidget(label)
 
+
 class MappingScreen(BaseScreen):
-    def __init__(self, stacked_widget):
+    def __init__(self, stacked_widget: QStackedWidget, telemetry_node):
         super().__init__(stacked_widget)
-        label = QLabel("Mapping Screen")
-        label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(label)
+
+        self.node = telemetry_node
+
+        # ---------- Title ----------
+        title_label = QLabel("Mapping Screen")
+        title_label.setAlignment(Qt.AlignCenter)
+        title_label.setStyleSheet("font-size: 20px; font-weight: bold; color: white;")
+        self.layout.addWidget(title_label)
+
+        # ---------- Image Container ----------
+        self.image_container = QWidget()
+        self.image_container.setStyleSheet("background-color: #101010; border: 1px solid #444;")
+        image_layout = QVBoxLayout(self.image_container)
+        image_layout.setContentsMargins(10, 10, 10, 10)
+        image_layout.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.image_container, stretch=1)
+
+        # ---------- Image Display Label ----------
+        self.image_label = QLabel("Waiting for map data...")
+        self.image_label.setAlignment(Qt.AlignCenter)
+        self.image_label.setMinimumSize(640, 480)
+        self.image_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.image_label.setStyleSheet("background-color: #202020; color: white; border: 2px dashed #555;")
+        image_layout.addWidget(self.image_label)
+
+        # ---------- Status Label ----------
+        self.status_label = QLabel("� Connecting to /map ...")
+        self.status_label.setAlignment(Qt.AlignCenter)
+        self.status_label.setStyleSheet("color: gray; font-size: 12px;")
+        self.layout.addWidget(self.status_label)
+
+        # ---------- Storage ----------
+        self.map_data = None
+        self.map_info = None
+        self.robot_pose = None
+        self.particles = []  # list of (x, y) particle positions
+
+        # ---------- ROS2 Subscriptions ----------
+
+        qos = QoSProfile(
+            depth=1,
+            durability=DurabilityPolicy.TRANSIENT_LOCAL,
+            reliability=ReliabilityPolicy.RELIABLE
+        )
+
+        self.map_sub = self.node.create_subscription(
+            OccupancyGrid,
+            "/map",
+            self.map_callback,
+            qos
+        )
+
+        self.pose_sub = self.node.create_subscription(
+            PoseWithCovarianceStamped,
+            "/amcl_pose",
+            self.pose_callback,
+            10
+        )
+
+        self.particle_sub = self.node.create_subscription(
+            ParticleCloud,
+            "/particle_cloud",
+            self.particle_callback,
+            10
+        )
+
+        # ---------- Update Timer ----------
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_map)
+        self.timer.start(200)  # update every 0.2s
+
+        print("MappingScreen initialized and waiting for map/particle data...")
+
+    # ------------------- Map Callback -------------------
+    def map_callback(self, msg: OccupancyGrid):
+        self.map_info = msg.info
+        width = msg.info.width
+        height = msg.info.height
+        data = np.array(msg.data).reshape((height, width))
+
+        # Remap occupancy to GUI-friendly PGM style
+        # -1 unknown -> medium gray 128
+        # 0 free -> light gray 200
+        # >0 occupied -> dark gray 50
+        display = np.zeros_like(data, dtype=np.uint8)
+        display[data < 0] = 128
+        display[data == 0] = 200
+        display[data > 0] = 50
+
+        # Flip Y-axis to match coordinate frames
+        self.map_data = np.flipud(display)
+        self.status_label.setText("Receiving /map data")
+
+    # ------------------- Pose Callback -------------------
+    def pose_callback(self, msg: PoseWithCovarianceStamped):
+        self.robot_pose = msg.pose.pose
+
+    # ------------------- Particle Callback -------------------
+    def particle_callback(self, msg: ParticleCloud):        
+        self.particles = [(p.x, p.y) for p in msg.particles]
+
+    # ------------------- GUI Update -------------------
+    def update_map(self):
+        if self.map_data is None:
+            self.image_label.setText("Waiting for map data...")
+            return
+
+        height, width = self.map_data.shape
+
+        # QImage creation
+        qt_image = QImage(self.map_data.tobytes(), width, height, QImage.Format_Grayscale8)
+        pixmap = QPixmap.fromImage(qt_image).scaled(
+            self.image_label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation
+        )
+
+        painter = QPainter(pixmap)
+        x_scale = pixmap.width() / width
+        y_scale = pixmap.height() / height
+
+        # ---------- Draw Particles ----------
+        if self.particles and self.map_info is not None:
+            painter.setBrush(QColor(0, 255, 0, 180))
+            painter.setPen(Qt.NoPen)
+            for px, py in self.particles:
+                mx = int((px - self.map_info.origin.position.x) / self.map_info.resolution)
+                my = int((py - self.map_info.origin.position.y) / self.map_info.resolution)
+                my = height - my
+                painter.drawEllipse(int(mx * x_scale) - 2, int(my * y_scale) - 2, 4, 4)
+
+        # ---------- Draw Robot ----------
+        if self.robot_pose is not None and self.map_info is not None:
+            painter.setBrush(QColor(255, 0, 0))
+            painter.setPen(Qt.NoPen)
+            mx = int((self.robot_pose.position.x - self.map_info.origin.position.x) / self.map_info.resolution)
+            my = int((self.robot_pose.position.y - self.map_info.origin.position.y) / self.map_info.resolution)
+            my = height - my
+            painter.drawEllipse(int(mx * x_scale) - 3, int(my * y_scale) - 3, 6, 6)
+
+        painter.end()
+        self.image_label.setPixmap(pixmap)
+
+
 
 class ManualScreen(BaseScreen):
-    def __init__(self, stacked_widget):
+    def __init__(self, stacked_widget: QStackedWidget, telemetry_node):
         super().__init__(stacked_widget)
-        label = QLabel("Manual Piloting Screen")
-        label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(label)
+
+        self.node = telemetry_node
+
+        # ---------- Title ----------
+        title_label = QLabel("Manual Piloting Screen")
+        title_label.setAlignment(Qt.AlignCenter)
+        title_label.setStyleSheet("font-size: 20px; font-weight: bold; color: white;")
+        self.layout.addWidget(title_label)
+
+        # ---------- Image Container ----------
+        self.image_container = QWidget()
+        self.image_container.setStyleSheet("background-color: #101010; border: 1px solid #444;")
+        image_layout = QVBoxLayout(self.image_container)
+        image_layout.setContentsMargins(10, 10, 10, 10)
+        image_layout.setAlignment(Qt.AlignCenter)
+        self.layout.addWidget(self.image_container, stretch=1)
+
+        # ---------- Image Display Label ----------
+        self.image_label = QLabel("Waiting for camera feed...")
+        self.image_label.setAlignment(Qt.AlignCenter)
+        self.image_label.setMinimumSize(640, 480)
+        self.image_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.image_label.setStyleSheet(
+            "background-color: #202020; color: white; border: 2px dashed #555;"
+        )
+        image_layout.addWidget(self.image_label)
+
+        # ---------- Status Label ----------
+        self.status_label = QLabel("Connecting to /camera/image ...")
+        self.status_label.setAlignment(Qt.AlignCenter)
+        self.status_label.setStyleSheet("color: gray; font-size: 12px;")
+        self.layout.addWidget(self.status_label)
+
+        # ---------- CV Bridge & Storage ----------
+        self.bridge = CvBridge()
+        self.latest_frame = None
+
+        # ---------- ROS2 Subscription ----------
+        self.subscription = self.node.create_subscription(
+            Image,
+            "/camera/image",
+            self.image_callback,
+            10
+        )
+
+        # ---------- ROS Publisher for Manual Piloting ----------
+        self.cmd_pub = self.node.create_publisher(Twist, '/cmd_vel', 10)
+
+        # ---------- Update Timer ----------
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_image)
+        self.timer.start(100)  # refresh every 0.1s
+
+        # ---------- Enable Keyboard Focus ----------
+        self.setFocusPolicy(Qt.StrongFocus)
+        self.setFocus()
+
+    # ------------------- ROS Callback -------------------
+    def image_callback(self, msg: Image):
+        try:
+            cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
+            self.latest_frame = cv_image
+            self.status_label.setText("Receiving /camera/image frames")
+        except Exception as e:
+            self.node.get_logger().error(f"Image conversion failed: {e}")
+            self.status_label.setText(f" Image conversion error: {e}")
+
+    # ------------------- GUI Update -------------------
+    def update_image(self):
+        if self.latest_frame is not None:
+            rgb_image = cv2.cvtColor(self.latest_frame, cv2.COLOR_BGR2RGB)
+            h, w, ch = rgb_image.shape
+            bytes_per_line = ch * w
+            qt_image = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+            pixmap = QPixmap.fromImage(qt_image)
+            self.image_label.setPixmap(
+                pixmap.scaled(
+                    self.image_label.size(),
+                    Qt.KeepAspectRatio,
+                    Qt.SmoothTransformation
+                )
+            )
+        else:
+            self.image_label.setText("Waiting for camera feed...")
+
+    # ------------------- Keyboard Control -------------------
+    def keyPressEvent(self, event):
+        twist = Twist()
+        if event.key() == Qt.Key_Up:
+            twist.linear.x = 0.2
+        elif event.key() == Qt.Key_Down:
+            twist.linear.x = -0.2
+        elif event.key() == Qt.Key_Left:
+            twist.angular.z = 0.5
+        elif event.key() == Qt.Key_Right:
+            twist.angular.z = -0.5
+        self.cmd_pub.publish(twist)
+
+    def keyReleaseEvent(self, event):
+        twist = Twist()  # Stop the robot
+        self.cmd_pub.publish(twist)
+
 
 # -----------------------------
 # Dashboard Screen (buttons -> screens)
@@ -487,8 +666,9 @@ class DashboardScreen(BaseScreen):
         # Screens
         self.live_monitoring_screen = LiveMonitoringScreen(telemetry_node, stacked_widget)
         self.robots_screen = RobotsScreen(stacked_widget)
-        self.mapping_screen = MappingScreen(stacked_widget)
-        self.manual_screen = ManualScreen(stacked_widget)
+        self.mapping_screen = MappingScreen(stacked_widget, telemetry_node)
+        stacked_widget.addWidget(self.mapping_screen)
+        self.manual_screen = ManualScreen(stacked_widget, telemetry_node)
 
         for screen in [self.live_monitoring_screen, self.robots_screen,
                        self.mapping_screen, self.manual_screen]:

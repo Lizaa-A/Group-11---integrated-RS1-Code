@@ -1,0 +1,27 @@
+running develop
+running egg_info
+creating ugv_dashboard_gui.egg-info
+writing ugv_dashboard_gui.egg-info/PKG-INFO
+writing dependency_links to ugv_dashboard_gui.egg-info/dependency_links.txt
+writing entry points to ugv_dashboard_gui.egg-info/entry_points.txt
+writing requirements to ugv_dashboard_gui.egg-info/requires.txt
+writing top-level names to ugv_dashboard_gui.egg-info/top_level.txt
+writing manifest file 'ugv_dashboard_gui.egg-info/SOURCES.txt'
+reading manifest file 'ugv_dashboard_gui.egg-info/SOURCES.txt'
+writing manifest file 'ugv_dashboard_gui.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/python3.10/site-packages/ugv-dashboard-gui.egg-link (link to .)
+Installing gui_dashboard script to /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/ugv_dashboard_gui
+Installing pgm_publisher script to /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/ugv_dashboard_gui
+
+Installed /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui
+running symlink_data
+creating /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ament_index
+creating /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ament_index/resource_index
+creating /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ament_index/resource_index/packages
+symbolically linking /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/resource/ugv_dashboard_gui -> /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ament_index/resource_index/packages
+symbolically linking /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/package.xml -> /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ugv_dashboard_gui
+creating /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ugv_dashboard_gui/launch
+symbolically linking /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/launch/gui_launch.py -> /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ugv_dashboard_gui/launch
+creating /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ugv_dashboard_gui/test_images
+symbolically linking /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/ugv_dashboard_gui/test_images/siteA.pgm -> /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/share/ugv_dashboard_gui/test_images
