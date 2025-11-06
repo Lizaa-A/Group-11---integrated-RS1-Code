@@ -343,7 +343,7 @@ class LiveMonitoringScreen(BaseScreen):
 
         # Some producers may publish "level_percent" instead of "percent_full" — support both
         seed_percent = float(seed.get("percent_full", seed.get("level_percent", 100.0)))
-        seed_weight  = float(seed.get("weight_g", 100.0))
+        seed_weight  = float(seed.get("weight_g", 300.0))
         seed_low     = bool(seed.get("low", False))
         seed_empty   = bool(seed.get("empty", False)) 
 

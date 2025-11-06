@@ -17,7 +17,7 @@ public:
     // Parameters
     // ---------------------------
     // Total hopper capacity in grams
-    hopper_capacity_g_     = declare_parameter<double>("hopper_capacity_g", 100.0);
+    hopper_capacity_g_     = declare_parameter<double>("hopper_capacity_g", 300.0);
     // Current fill level as a percentage of capacity (0..100)
     level_percent_         = declare_parameter<double>("initial_level_percent", 100.0);
     // Constant trickle/settling loss (grams per second)

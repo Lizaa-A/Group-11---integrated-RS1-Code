@@ -20,7 +20,7 @@ public:
     // ------------ Seed outflow (for hopper weight) ------------
     // If >0, use explicit seeds/sec; otherwise derive from seeds_per_run / plant_duration_s
     seeds_per_second_ = declare_parameter("seeds_per_second", -1.0);
-    grams_per_seed_   = declare_parameter("grams_per_seed", 40);   // 40 mg per seed by default
+    grams_per_seed_   = declare_parameter("grams_per_seed", 10);   // 40 mg per seed by default
     stop_on_low_      = declare_parameter("stop_on_low", true);       // pause if hopper low
     outflow_topic_    = declare_parameter<std::string>("outflow_topic", "/seed_hopper/outflow_gps");
 
