@@ -101,7 +101,7 @@ def generate_launch_description():
         'world',
         default_value='simple_trees',
         description='Which world to load',
-        choices=['simple_trees', 'large_demo']
+        choices=['simple_trees', 'large_demo', 'flat_terrain_rocks', 'flat_terrain_trees', 'my_custom_demo']
     )
     ld.add_action(world_launch_arg)
     gazebo = IncludeLaunchDescription(

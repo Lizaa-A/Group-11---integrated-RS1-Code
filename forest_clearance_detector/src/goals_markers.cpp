@@ -11,8 +11,8 @@ class GoalsMarkers : public rclcpp::Node {
 public:
   GoalsMarkers() : rclcpp::Node("goals_markers")
   {
-    in_topic_ = declare_parameter<std::string>("in_topic", "/ugv/clearance_goals_unordered"); // subscribe to goals here
-    marker_topic_ = declare_parameter<std::string>("marker_topic", "/mission/markers"); // publish markers here
+    in_topic_ = declare_parameter<std::string>("in_topic", "/ugv/clearance_goals_rejected"); // subscribe to goals here
+    marker_topic_ = declare_parameter<std::string>("marker_topic", "/mission/markers_rejected"); // publish markers here
     
     show_text_ = declare_parameter<bool>("show_text", true); // numbered labels for goals
     z_offset_ = declare_parameter<double>("z_offset", 0.1); // raise markers a bit
@@ -20,9 +20,9 @@ public:
     text_scale_ = declare_parameter<double>("text_scale", 0.25); // text height m
 
     // Colour for the markers
-    color_r_ = declare_parameter<double>("color_r", 0.0);
-    color_g_ = declare_parameter<double>("color_g", 0.7);
-    color_b_ = declare_parameter<double>("color_b", 1.0);
+    color_r_ = declare_parameter<double>("color_r", 1.0);
+    color_g_ = declare_parameter<double>("color_g", 0.0);
+    color_b_ = declare_parameter<double>("color_b", 0.0);
     color_a_ = declare_parameter<double>("color_a", 1.0);
 
     // Marker publisher: transient_local so RViz can see last published state
@@ -51,8 +51,8 @@ private:
     // Spheres as a single SPHERE_LIST marker
     visualization_msgs::msg::Marker spheres;
     spheres.header = msg->header; // frame_id should be "map"
-    spheres.ns = "goals"; // namespace
-    spheres.id = 0; // single marker
+    spheres.ns = "goals rejected"; // namespace
+    spheres.id = 42; // single marker
     spheres.type = visualization_msgs::msg::Marker::SPHERE_LIST; // multiple spheres in one marker
     spheres.action = visualization_msgs::msg::Marker::ADD; // add/modify
     spheres.pose.orientation.w = 1.0;

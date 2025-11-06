@@ -26,14 +26,11 @@ find_package(tf2_geometry_msgs REQUIRED)
 add_executable(soil_prep_fsm src/soil_prep_fsm.cpp)
 ament_target_dependencies(soil_prep_fsm rclcpp std_msgs std_srvs geometry_msgs)
 
-add_executable(straight_drive src/straight_drive.cpp)
-ament_target_dependencies(straight_drive rclcpp geometry_msgs)
-
 add_executable(water_level_sim src/water_level_sim.cpp)
 ament_target_dependencies(water_level_sim rclcpp std_msgs std_srvs)
 
 add_executable(planting_sim src/planting_sim.cpp)
-ament_target_dependencies(planting_sim rclcpp std_msgs std_srvs geometry_msgs)
+ament_target_dependencies(planting_sim rclcpp std_msgs std_srvs geometry_msgs nav_msgs)
 
 add_executable(cover_sim src/cover_sim.cpp)
 ament_target_dependencies(cover_sim rclcpp std_msgs std_srvs geometry_msgs nav_msgs)
@@ -54,7 +51,6 @@ ament_target_dependencies(seed_weight rclcpp std_msgs std_srvs geometry_msgs)
 #chmod +x src/tcp_to_ros2_both.py
 
 install(TARGETS
-  straight_drive
   water_level_sim
   seed_weight
   soil_prep_fsm

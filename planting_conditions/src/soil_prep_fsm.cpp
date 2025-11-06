@@ -83,6 +83,7 @@ public:
         stopMotion();
         reset_gates_();
         state_ = State::PROBING;
+        publish_status("FSM: CHECKING CONDITIONS");
         RCLCPP_INFO(get_logger(), "Start requested");
         res->success = true; res->message = "Started";
       });
@@ -156,6 +157,7 @@ private:
             std_msgs::msg::Bool sb;  sb.data  = true; sun_block_pub_->publish(sb);
             stopMotion();
             state_ = State::REQUEST_NEXT_GOAL;
+            request_sent_=false;
             publish_status("FSM: BAD SUNLIGHT");
             RCLCPP_WARN(get_logger(), "Rejected: inadequate sunlight.");
             break;
@@ -232,8 +234,11 @@ private:
           rake_segment_forward_ = true;
           rake_started_ = false;
           state_ = State::RAKING;
+          publish_status("FSM: RAKING");
           RCLCPP_INFO(get_logger(), "Raking with %d passes, segment=%.2fs, speed=%.2f m/s",
                       rake_passes_, rake_seg_time_s_, rake_speed_);
+
+    
         } else {
           std_msgs::msg::Bool rej; rej.data = true; reject_pub_->publish(rej);
           stopMotion();
@@ -246,12 +251,16 @@ private:
 
       case State::RAKING: {
         // need to say raking state here:
-        static bool sent = false;              // (or make it a member: request_sent_)
-        if (!sent) {
-          publish_status("FSM: RAKING");
-          sent = true;
+        // static bool sent = false;              // (or make it a member: request_sent_)
+        // if (!sent) {
+        //   publish_status("FSM: RAKING");
+        //   sent = true;
+        // }
+        if (!rake_started_) {
+          rake_started_ = true;
+          rake_segment_end_ = t + rclcpp::Duration::from_seconds(rake_seg_time_s_);
         }
-        
+
         if (!rake_started_) {
           rake_started_ = true;
           rake_segment_end_ = t + rclcpp::Duration::from_seconds(rake_seg_time_s_);
@@ -286,12 +295,12 @@ private:
         break;
 
       case State::REQUEST_NEXT_GOAL:
-        static bool sent = false;              // (or make it a member: request_sent_)
-        if (!sent) {
+        // static bool sent = false;              // (or make it a member: request_sent_)
+        if (!request_sent_) {
           publish_status("FSM: REQUESTING NEXT GOAL");
           std_msgs::msg::Empty msg;
           permit_next_pub_->publish(msg);
-          sent = true;
+          request_sent_ = true;
         }
         // using done_pub_
         std_msgs::msg::Bool done_msg;
@@ -314,6 +323,8 @@ private:
     have_sunlight_ = false;
     last_sunlight_ok_ = false;
     last_sunlight_stamp_ = rclcpp::Time(0,0,get_clock()->get_clock_type());
+
+    request_sent_ = false;
 
     sunlight_probe_started_ = false;
     sunlight_checked_ok_ = false;
@@ -359,6 +370,7 @@ private:
   rclcpp::Time sunlight_probe_start_;
 
   // Raking
+  bool request_sent_{false};
   int  rake_pass_idx_{0};
   bool rake_segment_forward_{true};
   bool rake_started_{false};

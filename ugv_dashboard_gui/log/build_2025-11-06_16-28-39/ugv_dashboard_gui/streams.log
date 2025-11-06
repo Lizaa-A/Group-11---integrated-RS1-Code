@@ -1,0 +1,19 @@
+[0.434s] Invoking command in '/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui': PYTHONPATH=/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/build --no-deps symlink_data
+[0.615s] running develop
+[0.733s] running egg_info
+[0.733s] writing ugv_dashboard_gui.egg-info/PKG-INFO
+[0.733s] writing dependency_links to ugv_dashboard_gui.egg-info/dependency_links.txt
+[0.733s] writing entry points to ugv_dashboard_gui.egg-info/entry_points.txt
+[0.733s] writing requirements to ugv_dashboard_gui.egg-info/requires.txt
+[0.733s] writing top-level names to ugv_dashboard_gui.egg-info/top_level.txt
+[0.735s] reading manifest file 'ugv_dashboard_gui.egg-info/SOURCES.txt'
+[0.735s] writing manifest file 'ugv_dashboard_gui.egg-info/SOURCES.txt'
+[0.736s] running build_ext
+[0.736s] Creating /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/python3.10/site-packages/ugv-dashboard-gui.egg-link (link to .)
+[0.737s] Installing gui_dashboard script to /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/ugv_dashboard_gui
+[0.737s] Installing pgm_publisher script to /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/ugv_dashboard_gui
+[0.737s] 
+[0.737s] Installed /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui
+[0.737s] running symlink_data
+[0.737s] error: can't copy '/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/ugv_dashboard_gui/ugv_dashboard_gui/test_images/husky.png': doesn't exist or not a regular file
+[0.757s] Invoked command in '/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui' returned '1': PYTHONPATH=/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/install/ugv_dashboard_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/liv/rs1_2025_clone_ws/src/rs1_2025_soil/ugv_dashboard_gui/build/ugv_dashboard_gui/build --no-deps symlink_data

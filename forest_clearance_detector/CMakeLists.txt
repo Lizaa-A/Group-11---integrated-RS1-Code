@@ -15,6 +15,7 @@ find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
+find_package(nav2_costmap_2d REQUIRED)
 
 add_executable(goals_markers src/goals_markers.cpp)
 ament_target_dependencies(goals_markers rclcpp nav_msgs visualization_msgs)
@@ -31,9 +32,16 @@ ament_target_dependencies(rotating_clearance_detector
   tf2_geometry_msgs
 )
 
+add_executable(costmap_goal_filter src/costmap_goal_filter.cpp)
+ament_target_dependencies(costmap_goal_filter
+  rclcpp nav2_costmap_2d nav_msgs tf2 tf2_ros
+)
+
+
 install(TARGETS
   rotating_clearance_detector
   goals_markers
+  costmap_goal_filter
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY launch/

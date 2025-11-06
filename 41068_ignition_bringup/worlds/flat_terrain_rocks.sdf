@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<sdf version='1.8'>
+  <world name="flat_terrain">
+
+    <plugin name='ignition::gazebo::systems::Physics' filename='ignition-gazebo-physics-system' />
+    <plugin name='ignition::gazebo::systems::UserCommands' filename='ignition-gazebo-user-commands-system' />
+    <plugin name='ignition::gazebo::systems::SceneBroadcaster' filename='ignition-gazebo-scene-broadcaster-system' />
+    <plugin name='ignition::gazebo::systems::Contact' filename='ignition-gazebo-contact-system' />
+
+    <!-- Directional light -->
+    <light name="sun" type="directional">
+      <cast_shadows>1</cast_shadows>
+      <pose>0 0 100 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.8 0.8 0.8 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+      <intensity>5</intensity>
+    </light>
+
+    <gravity>0 0 -9.81</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type="adiabatic"/>
+
+    <physics name="default_physics" type="ignored">
+      <max_step_size>0.01</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>100</real_time_update_rate>
+    </physics>
+
+    <scene>
+      <ambient>1.0 1.0 1.0 1</ambient>
+      <background>0.6 0.8 1.0 1</background>
+      <shadows>1</shadows>
+      <grid>0</grid>
+    </scene>
+
+    <!-- Spherical coordinates -->
+    <spherical_coordinates>
+      <latitude_deg>0.0</latitude_deg>
+      <longitude_deg>0.0</longitude_deg>
+      <elevation>10.0</elevation>
+      <heading_deg>0</heading_deg>
+      <surface_model>EARTH_WGS84</surface_model>
+    </spherical_coordinates>
+
+
+    <!-- Your Custom Model -->
+    <include>
+      <uri>model://flat_terrain_model</uri>
+      <name>flat_terrain_model</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+    <!--trees-->
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Pine%20tree
+      </uri>
+      <name>pine1</name>
+      <pose>-3.199 -6.222 0.1 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Pine%20tree
+      </uri>
+      <name>pine2</name>
+      <pose>-6.6933 -2.9219 0.1 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Pine%20tree
+      </uri>
+      <name>pine3</name>
+      <pose>-4.0823 6.8336 0.1 0 0 0</pose>
+    </include>
+
+    <!-- Rocks -->
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock1</name>
+      <pose>5.9690 -7.5837 0.4997 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock2</name>
+      <pose>6.9138 -6.0973 0.4987 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock3</name>
+      <pose>0.4996 -6.7951 0.6359 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock4</name>
+      <pose>-0.9858 2.0492 0.4999 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock5</name>
+      <pose>-1.8752 0.7919 0.4938 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock6</name>
+      <pose>1.2676 -4.9295 0.4827 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock7</name>
+      <pose>-6.422860 7.226420 0.546365 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock8</name>
+      <pose>0.074609 -5.857040 0.467697 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock9</name>
+      <pose>6.698350 5.081460 0.641536 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock10</name>
+      <pose>4.983390 6.004090 0.509012 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock11</name>
+      <pose>-3.549400 0.961561 0.496554 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock12</name>
+      <pose>-4.154260 2.408510 0.4958 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock13</name>
+      <pose>-3.174900 1.953560 1.8467 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%201
+      </uri>
+      <name>rock14</name>
+      <pose>-5.783480 -7.873520 0.553201 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%202
+      </uri>
+      <name>rock15</name>
+      <pose>6.9642 -7.0973 0.4996 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%202
+      </uri>
+      <name>rock16</name>
+      <pose>-1.986530 1.794620 0.492581 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%202
+      </uri>
+      <name>rock17</name>
+      <pose>-0.57986 -6.834 0.43617 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%202
+      </uri>
+      <name>rock18</name>
+      <pose>0.546365 3.65823 0.49367 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%202
+      </uri>
+      <name>rock19</name>
+      <pose>-4.483820 0.066732 0.489365 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%202
+      </uri>
+      <name>rock20</name>
+      <pose>-2.245590 -0.200114 0.489400 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%204
+      </uri>
+      <name>rock21</name>
+      <pose>-4.7607 -0.5861 0.1849 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%204
+      </uri>
+      <name>rock22</name>
+      <pose>-1.7723 3.5363 0.1877 0 0 0</pose>
+    </include>
+    <include>
+      <uri>
+        https://fuel.gazebosim.org/1.0/OpenRobotics/models/Falling%20Rock%204
+      </uri>
+      <name>rock23</name>
+      <pose>0.553201 -6.365460 0.292040 0 0 0</pose>
+    </include>
+    
+
+
+  </world>
+</sdf>

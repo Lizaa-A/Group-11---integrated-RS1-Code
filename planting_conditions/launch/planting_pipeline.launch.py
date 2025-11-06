@@ -27,7 +27,7 @@ def generate_launch_description():
     seed_weight = Node(
         package='planting_conditions',
         executable='seed_weight',
-        name='planting_weight',
+        name='seed_hopper_weight',
         output='screen',
         parameters=[{
             'raw_zero': 0.0,
@@ -39,9 +39,15 @@ def generate_launch_description():
             'smooth_window': 10,
             'publish_step_g': 5.0,
             'raw_msg_type': 'float32',
-        }],
-    )
-
+    }],
+    remappings=[
+        ('/seed_weight/weight_g',     '/seed_hopper/weight_g'),
+        ('/seed_weight/percent_full', '/seed_hopper/level_percent'),
+        ('/seed_weight/low',          '/seed_hopper/low'),
+        # If seed_weight listens for outflow, ensure it matches:
+        ('/seed_weight/outflow_gps',  '/seed_hopper/outflow_gps'),
+    ],
+)
     planting_site_markers = Node(
         package='planting_conditions',
         executable='planting_site_markers',   # C++ node we added
@@ -109,8 +115,19 @@ def generate_launch_description():
             'plant_speed_mps': 0.15,
             'seeds_per_run': 10,
             'cmd_vel_topic': cmd_vel_topic,
-        }],
-    )
+
+            'simulate_weight': True,          # publish hopper weight → /seed_hopper/*
+            'initial_seeds': 200,             # starting seed count
+            'seed_mass_g': 0.040,             # mass per seed (for load-cell sim)
+            'empty_holder_g': 120.0,          # holder tare weight
+            'known_weight_g': 1000.0,         # calibration weight
+            'raw_zero': 0.0,
+            'raw_known': 10000.0,
+            'auto_restart': False,            # optional continuous mode
+            'stop_when_empty': True,          # auto-stop when hopper empty
+            'seeds_per_second': -1.0,         # use seeds_per_run/duration unless overridden
+    }],
+)
 
     cover = Node(
         package='planting_conditions',

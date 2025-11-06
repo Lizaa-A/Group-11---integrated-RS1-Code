@@ -1,5 +1,5 @@
 <sdf version="1.7">
-<model name="grass_plane">
+<model name="forest_plane">
     <static>true</static>
     <link name="link">
         <!--<collision name="collision">
@@ -20,12 +20,12 @@
         </collision>
         <visual name="visual">
             <cast_shadows>false</cast_shadows>
-            <geometry>
-            <plane>
-                <normal>0 0 1</normal>
-                <size>25 25</size>
-            </plane>
-            </geometry>
+                <geometry>
+                <mesh>
+                    <uri>model://forest_plane/meshes/RS1_environment.dae</uri>
+                    <scale>10 10 10</scale>
+                </mesh>
+                </geometry>
             <material>
                 <!-- <diffuse>0.8 0.8 0.8 1</diffuse> -->
                 <ambient>1.0 1.0 1.0 1</ambient>

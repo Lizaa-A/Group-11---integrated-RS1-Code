@@ -71,11 +71,25 @@ def generate_launch_description():
     # -------------------------------------------------
     # forest clearance detector node, might have to change this later to be pkg if adding costmap stuff into forest_clearance_detector
     # -------------------------------------------------
-    clearance_node = Node(
-            package='forest_clearance_detector',
-            executable='rotating_clearance_detector',
-            name='rotating_clearance_detector',
-            output='screen'
+    # clearance_node = Node(
+    #         package='forest_clearance_detector',
+    #         executable='rotating_clearance_detector',
+    #         name='rotating_clearance_detector',
+    #         output='screen'
+    # )
+    
+    forest_clearance_share = FindPackageShare('forest_clearance_detector')
+
+    include_forest_clearance = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                forest_clearance_share,
+                'launch',
+                'clearance_and_filter.launch.py'
+            ])
+        ),
+        launch_arguments={
+        }.items(),
     )
 
     # -------------------------------------------------
@@ -100,7 +114,8 @@ def generate_launch_description():
     ld.add_action(telemetry_node)
 
 
-    ld.add_action(clearance_node)
+    # ld.add_action(clearance_node)
+    ld.add_action(include_forest_clearance)
     ld.add_action(include_mission_nav)
     ld.add_action(include_planting_pipeline)
 

@@ -33,17 +33,19 @@ public:
     this->declare_parameter<std::string>("base_frame", "base_link");
     this->declare_parameter<std::string>("target_frame", "map");
     this->declare_parameter<std::string>("cmd_vel_topic", "/cmd_vel");
-    this->declare_parameter<double>("sector_width_rad", 2.094);  // 120 deg
-    this->declare_parameter<int>("sectors", 3);
-    this->declare_parameter<int>("max_goals_per_sector", 2);
-    this->declare_parameter<int>("min_clear_columns", 6);
-    this->declare_parameter<int>("num_columns", 180);
+    this->declare_parameter<double>("sector_width_rad", 1.047);  // 60 deg
+    this->declare_parameter<int>("sectors", 6);
+    this->declare_parameter<int>("max_goals_per_sector", 3);
+    this->declare_parameter<int>("min_clear_columns", 10);
+    this->declare_parameter<int>("num_columns", 150);
     this->declare_parameter<double>("max_xy", 4.0);
-    this->declare_parameter<double>("obstacle_z_thresh", 0.5);
+    this->declare_parameter<double>("obstacle_z_thresh", 0.02);
     this->declare_parameter<double>("free_range_m", 2.0);
     this->declare_parameter<double>("rotate_speed", 0.8);
-    this->declare_parameter<double>("rotate_settle_s", 0.7);
+    this->declare_parameter<double>("rotate_settle_s", 1.2);
 
+    //VALUES TESTED WITH THAT ARE GOOD: free_range_m = 2, sectors = 6, sector witdth_rad = 1.047
+    // max_xy = 4, min_clear_columns = 10, num_columns = 150, rotate_speed = 0.8, rotate_settle_s = 1.2
     // 2) read parameters
     pointcloud_topic_ = this->get_parameter("pointcloud_topic").as_string();
     camera_frame_ = this->get_parameter("camera_frame").as_string();
@@ -63,7 +65,7 @@ public:
 
     // 3) create a latched path publisher so markers will connect (also transient local)
     auto latched_qos = rclcpp::QoS(1).reliable().transient_local();
-    path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/ugv/clearance_goals_unordered", latched_qos);
+    path_pub_ = this->create_publisher<nav_msgs::msg::Path>("/ugv/clearance_goals_unfiltered", latched_qos);
 
     // 4) cmd_vel publisher
     cmd_pub_ = this->create_publisher<geometry_msgs::msg::Twist>(cmd_vel_topic_, 10);
@@ -73,6 +75,8 @@ public:
 
     // 6) periodic timer that drives the little state machine
     timer_ = this->create_wall_timer(std::chrono::milliseconds(200), std::bind(&RotatingClearanceDetector::tick, this));
+
+    // latest_cloud_stamp_ = rclcpp::Time(0, 0, this->get_clock()->get_clock_type());
 
     RCLCPP_INFO(this->get_logger(), "Rotating clearance detector ready.");
   }
@@ -119,6 +123,11 @@ private:
       return;
     }
 
+    // if (latest_cloud_stamp_ < reached_yaw_time_) {
+    //   // need a fresh cloud after we stopped at this heading
+    //   return;
+    // }
+
     // 5) process cloud, and extract goals for this sector
     auto sector_goals = process_cloud_for_sector(*latest_cloud_);
     latest_cloud_.reset();
@@ -147,9 +156,12 @@ private:
   // ------------------------------------------------------------
   // cloudCb(): store the latest point cloud
   // ------------------------------------------------------------
+  // store cloud + stamp
+  // rclcpp::Time latest_cloud_stamp_;
   void cloudCb(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
   {
     latest_cloud_ = msg;
+    // latest_cloud_stamp_ = rclcpp::Time(msg->header.stamp, this->get_clock()->get_clock_type());
   }
 
   // ------------------------------------------------------------
@@ -220,6 +232,7 @@ private:
   {
     std::vector<geometry_msgs::msg::PoseStamped> out;
     std::vector<bool> free_col(num_columns_, true);
+    // std::vector<bool> blocked(num_columns_, false);
 
     const double half    = sector_width_ / 2.0;
     const double ang_min = -half;
@@ -297,7 +310,7 @@ private:
   }
 
   // ------------------------------------------------------------
-  // angle_to_col(): map angle in [ang_min, ang_max] → column index
+  // angle_to_col(): map angle in [ang_min, ang_max] to column index
   // ------------------------------------------------------------
   int angle_to_col(double angle, double ang_min, double ang_max)
   {

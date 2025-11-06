@@ -15,6 +15,7 @@ from cv_bridge import CvBridge
 import cv2
 import numpy as np
 from nav2_msgs.msg import ParticleCloud
+from ament_index_python.packages import get_package_share_directory
 
 from PySide6.QtWidgets import (
     QApplication, QWidget, QStackedWidget, QPushButton, QLabel,
@@ -87,7 +88,7 @@ class Header(QWidget):
         self.logout_btn.setStyleSheet(Styles.BUTTON)
         self.logout_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.login_screen))
 
-        self.task_status_light = QLabel("�")
+        self.task_status_light = QLabel("●")
         self.task_status_light.setStyleSheet(f"color: {Styles.TASK_LIGHT_OFF}; font-size: 16px;")
 
 
@@ -120,6 +121,8 @@ class Header(QWidget):
             "FSM - RAKING": "#945C46",
             "FSM - TANK REFILLED": "#2196F3",
             "FSM - TANK EMPTY": "#FF0000",
+            "FSM - LOW SEED LEVEL" 
+            "FSM - SEEDS EMPTY — requesting plant stop"
             "FSM - CHECKING CONDITIONS": "#489239",
             "FSM - BAD CONDITIONS": "#ff0000",
             "FSM - SEEDING": "#945C46",
@@ -128,7 +131,7 @@ class Header(QWidget):
         }
 
         color = color_map.get(task.strip(), "#cccccc")
-        self.task_status_light.setText("�")
+        self.task_status_light.setText("●")
         self.task_status_light.setStyleSheet(f"color: {color}; font-size: 24px;")
         self.task_status_light.repaint()
 
@@ -219,7 +222,7 @@ class LiveMonitoringScreen(BaseScreen):
         water_row = QHBoxLayout()
         self.water_label = QLabel("Water Tank:")
         self.water_label.setStyleSheet(Styles.LABEL)
-        self.water_dot = QLabel("�")
+        self.water_dot = QLabel("●")
         self.water_dot.setStyleSheet("color: gray; font-size: 18px;")
         self.water_value = QLabel("0 L")
         self.water_value.setStyleSheet(Styles.SECONDARY_TEXT_COLOR)
@@ -242,7 +245,7 @@ class LiveMonitoringScreen(BaseScreen):
         soil_row = QHBoxLayout()
         self.soil_label = QLabel("Soil Moisture:")
         self.soil_label.setStyleSheet(Styles.LABEL)
-        self.soil_dot = QLabel("�")
+        self.soil_dot = QLabel("●")
         self.soil_dot.setStyleSheet("color: gray; font-size: 18px;")
         self.soil_value = QLabel("0 (placeholder)")
         self.soil_value.setStyleSheet(Styles.SECONDARY_TEXT_COLOR)
@@ -265,7 +268,7 @@ class LiveMonitoringScreen(BaseScreen):
         seed_row = QHBoxLayout()
         self.seed_label = QLabel("Seed Weight:")
         self.seed_label.setStyleSheet(Styles.LABEL)
-        self.seed_dot = QLabel("�")
+        self.seed_dot = QLabel("●")
         self.seed_dot.setStyleSheet("color: gray; font-size: 18px;")
         self.seed_value = QLabel("0 g")
         self.seed_value.setStyleSheet(Styles.SECONDARY_TEXT_COLOR)
@@ -288,7 +291,7 @@ class LiveMonitoringScreen(BaseScreen):
         sun_row = QHBoxLayout()
         self.sun_label = QLabel("Sunlight:")
         self.sun_label.setStyleSheet(Styles.LABEL)
-        self.sun_dot = QLabel("�")
+        self.sun_dot = QLabel("●")
         self.sun_dot.setStyleSheet("color: gray; font-size: 18px;")
         sun_row.addWidget(self.sun_label)
         sun_row.addWidget(self.sun_dot)
@@ -307,11 +310,11 @@ class LiveMonitoringScreen(BaseScreen):
     # ======================================================
     def update_telemetry(self):
         data = getattr(self.telemetry_node, "telemetry_data", {})
-
+# changed
         # ----------------- WATER -----------------
         water = data.get("water_tank", {})
-        water_percent = float(water.get("level_percent", 0.0))
-        water_liters = float(water.get("level_liters", 0.0))
+        water_percent = float(water.get("level_percent", 100.0))
+        water_liters = float(water.get("level_liters", 10.0))
         water_low = bool(water.get("low", False))
 
         self.water_bar.setValue(int(water_percent))
@@ -336,17 +339,21 @@ class LiveMonitoringScreen(BaseScreen):
         self.soil_dot.setStyleSheet(f"color: {soil_color}; font-size: 18px;")
 
         # ----------------- SEED -----------------
-        seed = data.get("seed_weight", {})
-        seed_percent = float(seed.get("percent_full", 0.0))
-        seed_weight = float(seed.get("weight_g", 0.0))
-        seed_low = bool(seed.get("low", False))
+        seed = data.get("seed_hopper", data.get("seed_weight", {}))
 
-        self.seed_bar.setValue(int(seed_percent))
+        # Some producers may publish "level_percent" instead of "percent_full" — support both
+        seed_percent = float(seed.get("percent_full", seed.get("level_percent", 100.0)))
+        seed_weight  = float(seed.get("weight_g", 100.0))
+        seed_low     = bool(seed.get("low", False))
+        seed_empty   = bool(seed.get("empty", False)) 
+
+        # Progress bar + labels
+        self.seed_bar.setValue(int(round(seed_percent)))
         self.seed_bar.setFormat(f"{seed_percent:.1f}%")
         self.seed_value.setText(f"{seed_weight:.1f} g")
 
-        # seed light color
-        seed_colour = "#e74c3c" if seed_low else "#2ecc71"
+        # Light colour: red if low OR empty, green otherwise
+        seed_colour = "#e74c3c" if (seed_low or seed_empty) else "#2ecc71"
         self.seed_dot.setStyleSheet(f"color: {seed_colour}; font-size: 18px;")
 
         # ----------------- SUNLIGHT -----------------
@@ -355,17 +362,48 @@ class LiveMonitoringScreen(BaseScreen):
         self.sun_dot.setStyleSheet(f"color: {sun_color}; font-size: 18px;")
 
 
-
-
 # -----------------------------
 # Other Screens (placeholders)
 # -----------------------------
 class RobotsScreen(BaseScreen):
     def __init__(self, stacked_widget):
         super().__init__(stacked_widget)
-        label = QLabel("Robots Screen")
-        label.setAlignment(Qt.AlignCenter)
-        self.layout.addWidget(label)
+
+        layout = QVBoxLayout()
+        self.layout.addLayout(layout)
+
+        # Title
+        title_label = QLabel("Robots")
+        title_label.setStyleSheet(Styles.HEADER)
+        title_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(title_label)
+
+        # Husky image
+        image_label = QLabel()
+        image_label.setAlignment(Qt.AlignCenter)
+
+        image_path = os.path.join(
+            get_package_share_directory('ugv_dashboard_gui'),
+            'test_images',
+            'husky.png'
+        )
+        pixmap = QPixmap(image_path)
+        if pixmap.isNull():
+            image_label.setText("Husky image not found")
+        else:
+            image_label.setPixmap(pixmap.scaled(400, 250, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        layout.addWidget(image_label)
+
+        # Husky info paragraph
+        info_label = QLabel(
+            "The Husky UGV is a versatile unmanned ground vehicle suitable for research, "
+            "mapping, and field automation tasks. It can carry sensors, navigate autonomously, "
+            "and integrate with ROS 2 for telemetry and control."
+        )
+        info_label.setWordWrap(True)
+        info_label.setAlignment(Qt.AlignTop)
+        info_label.setStyleSheet(f"{Styles.LABEL} padding: 16px; border-radius: 8px; background-color: #252834;")
+        layout.addWidget(info_label)
 
 
 class MappingScreen(BaseScreen):
@@ -397,7 +435,7 @@ class MappingScreen(BaseScreen):
         image_layout.addWidget(self.image_label)
 
         # ---------- Status Label ----------
-        self.status_label = QLabel("� Connecting to /map ...")
+        self.status_label = QLabel("⏳ Connecting to /map ...")
         self.status_label.setAlignment(Qt.AlignCenter)
         self.status_label.setStyleSheet("color: gray; font-size: 12px;")
         self.layout.addWidget(self.status_label)
@@ -629,56 +667,108 @@ class DashboardScreen(BaseScreen):
         self.telemetry_node = telemetry_node
 
         grid = QGridLayout()
+        grid.setSpacing(20)
         self.layout.addLayout(grid)
 
+        # --- Top row ---
         welcome_label = QLabel("Welcome to BloomBot!")
         welcome_label.setStyleSheet(Styles.HEADER)
-        welcome_label.setAlignment(Qt.AlignTop)
+        welcome_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         grid.addWidget(welcome_label, 0, 0)
 
-        project_info = QLabel("Project info / description here")
-        project_info.setWordWrap(True)
-        project_info.setStyleSheet(Styles.LABEL)
-        grid.addWidget(project_info, 0, 1)
+        description_label = QLabel("   AUTONOMOUS PLANTING SYSTEM")
+        description_label.setWordWrap(True)
+        description_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        description_label.setStyleSheet(Styles.LABEL)
+        grid.addWidget(description_label, 0, 1)
 
-        # Buttons
+        # --- Middle row ---
+        # Left: logo image
+        image_label = QLabel()
+        image_label.setAlignment(Qt.AlignCenter)
+
+        try:
+            pkg_path = get_package_share_directory('ugv_dashboard_gui')
+            image_path = os.path.join(pkg_path, 'test_images', 'BloomBot_logo.png')
+            if os.path.exists(image_path):
+                pixmap = QPixmap(image_path)
+                image_label.setPixmap(
+                    pixmap.scaled(300, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                )
+            else:
+                image_label.setText("Logo not found ")
+                image_label.setStyleSheet("color: gray; font-size: 14px;")
+        except Exception as e:
+            image_label.setText(f"Error loading logo: {e}")
+            image_label.setStyleSheet("color: red; font-size: 12px;")
+
+        grid.addWidget(image_label, 1, 0)
+
+        # Right: info box
+        info_box = QLabel(
+            "BloomBot integrates robotics, mapping, and real-time monitoring to automate field maintenance tasks such as seeding, watering, and soil analysis. "
+            "This dashboard allows you to monitor live data, plan missions, and control robots in the field environment."
+        )
+        info_box.setWordWrap(True)
+        info_box.setAlignment(Qt.AlignTop)
+        info_box.setStyleSheet(f"{Styles.LABEL} padding: 16px; border-radius: 8px; background-color: #252834;")
+        grid.addWidget(info_box, 1, 1)
+
+        # --- Bottom row ---
+        # Left: navigation buttons
         buttons_layout = QVBoxLayout()
         self.robot_btn = QPushButton("Robots")
         self.live_btn = QPushButton("Live Monitoring")
         self.mapping_btn = QPushButton("Mapping")
         self.manual_btn = QPushButton("Manual Piloting")
+
         for btn in [self.robot_btn, self.live_btn, self.mapping_btn, self.manual_btn]:
             btn.setStyleSheet(Styles.BUTTON)
             btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
             buttons_layout.addWidget(btn)
-        grid.addLayout(buttons_layout, 1, 0)
+        grid.addLayout(buttons_layout, 2, 0)
 
-        placeholder = QLabel("More project info / placeholders")
-        placeholder.setStyleSheet(Styles.LABEL)
-        placeholder.setAlignment(Qt.AlignCenter)
-        grid.addWidget(placeholder, 1, 1)
+        # Right: short descriptions corresponding to buttons
+        desc_layout = QVBoxLayout()
+        desc_texts = [
+            "• View robot information",
+            "• Monitor live sensor data",
+            "• View lidar mapping and active robot position",
+            "• Manually pilot robots"
+        ]
+        for text in desc_texts:
+            lbl = QLabel(text)
+            lbl.setStyleSheet(f"{Styles.LABEL} padding-left: 8px;")
+            desc_layout.addWidget(lbl)
+        grid.addLayout(desc_layout, 2, 1)
 
+        # --- Stretching ---
         grid.setColumnStretch(0, 1)
         grid.setColumnStretch(1, 1)
         grid.setRowStretch(0, 1)
-        grid.setRowStretch(1, 1)
+        grid.setRowStretch(1, 2)
+        grid.setRowStretch(2, 2)
 
-        # Screens
+        # --- Screens ---
         self.live_monitoring_screen = LiveMonitoringScreen(telemetry_node, stacked_widget)
         self.robots_screen = RobotsScreen(stacked_widget)
         self.mapping_screen = MappingScreen(stacked_widget, telemetry_node)
-        stacked_widget.addWidget(self.mapping_screen)
         self.manual_screen = ManualScreen(stacked_widget, telemetry_node)
 
-        for screen in [self.live_monitoring_screen, self.robots_screen,
-                       self.mapping_screen, self.manual_screen]:
+        for screen in [
+            self.live_monitoring_screen,
+            self.robots_screen,
+            self.mapping_screen,
+            self.manual_screen
+        ]:
             self.stacked_widget.addWidget(screen)
 
-        # Connect buttons
+        # --- Button connections ---
         self.live_btn.clicked.connect(lambda: self.stacked_widget.setCurrentWidget(self.live_monitoring_screen))
         self.robot_btn.clicked.connect(lambda: self.stacked_widget.setCurrentWidget(self.robots_screen))
         self.mapping_btn.clicked.connect(lambda: self.stacked_widget.setCurrentWidget(self.mapping_screen))
         self.manual_btn.clicked.connect(lambda: self.stacked_widget.setCurrentWidget(self.manual_screen))
+
 
 # -----------------------------
 # Main App
@@ -718,7 +808,7 @@ def main():
     telemetry_node.update_data({
         "task_status": "Idle",
         "water_tank": {"level_liters": 5.0, "level_percent": 50.0, "low": False},
-        "soil_moisture": {"raw": 240.0, "percent": 48.0},
+        "soil_moisture": {"raw": 00.0, "percent": 0.0},
         "sunlight_ok": True
     })
 

@@ -9,6 +9,13 @@ ros2 launch mission_fsm mission_fsm_gui_ignition.launch.py \
   auto_map:=false \
   map_yaml:=$(ros2 pkg prefix mission_fsm)/share/mission_fsm/maps/siteA.yaml
 
+ros2 launch mission_fsm mission_fsm_gui_ignition.launch.py \
+  rviz:=true \
+  nav2:=true  \
+  use_sim_time:=true  \
+  auto_map:=false  \
+  world:=flat_terrain_rocks  \
+  map_yaml:=$(ros2 pkg prefix mission_fsm)/share/mission_fsm/maps/FlatTerrainRockssiteA.yaml
 
 '''
 from launch import LaunchDescription

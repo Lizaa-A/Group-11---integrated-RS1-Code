@@ -31,6 +31,7 @@ public:
     out_topic_nav_ = declare_parameter<std::string>("nav_clearances_topic", "/perception/clearances");
     perception_sub_ = create_subscription<nav_msgs::msg::Path>(in_topic_perception_, 10, [&](nav_msgs::msg::Path::SharedPtr msg)
     { // store
+      publish_status("FSM: SCAN FOR GOAL CLEARANCES");
         latest_path_ = *msg;
         no_clearances_ = false;
         RCLCPP_INFO(get_logger(), "FSM: got %zu clearances from %s", msg->poses.size(), in_topic_perception_.c_str());
@@ -40,6 +41,7 @@ public:
           RCLCPP_INFO(get_logger(), "FSM: forwarded clearances to %s", out_topic_nav_.c_str());
         }
         state_ = State::NAV_TO_GOAL;
+        publish_status("FSM: NAV TO GOAL");
       });
     // publisher to the topic your nav stack expects
     nav_clearances_pub_ = create_publisher<nav_msgs::msg::Path>(out_topic_nav_, 10);
@@ -135,6 +137,7 @@ private:
   // 1) wait until perception sends us something
   void state_scan_for_goal_clearances()
   {
+    publish_status("FSM:SCAN FOR GOAL CLEARANCES");
     if (latest_path_) {
       RCLCPP_INFO(get_logger(), "FSM: clearances received, sending to nav");
       state_ = State::NAV_TO_GOAL;
@@ -170,7 +173,7 @@ private:
       planting_done_ = false;
       // evaluate conditions
       state_ = State::CONDITIONS_AND_PLANTING;
-    } else if (mission_status_ == "ABORT") {
+    } else if (mission_status_ == "ABORTED") {
       RCLCPP_WARN(get_logger(), "FSM: nav aborted - requesting next goal");
       publish_status("FSM: REQUESTING NEXT GOAL");
       state_ = State::REQUEST_NEXT_GOAL;
