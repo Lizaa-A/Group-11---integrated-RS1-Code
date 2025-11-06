@@ -310,7 +310,7 @@ message(STATUS "Execute custom install script")
 
 # begin of custom install code
 
-# install("TARGETS" "straight_drive" "water_level_sim" "soil_prep_fsm" "planting_sim" "cover_sim" "irrigation_sim" "planting_site_markers" "DESTINATION" "lib/planting_conditions")
+# install("TARGETS" "straight_drive" "water_level_sim" "seed_weight" "soil_prep_fsm" "planting_sim" "cover_sim" "irrigation_sim" "planting_site_markers" "DESTINATION" "lib/planting_conditions")
 include("/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/ament_cmake_symlink_install_targets_0_${CMAKE_INSTALL_CONFIG_NAME}.cmake")
 
 # install(PROGRAMS "src/planting_pipeline.py" "src/tcp_to_ros2_both.py" "DESTINATION" "lib/planting_conditions")

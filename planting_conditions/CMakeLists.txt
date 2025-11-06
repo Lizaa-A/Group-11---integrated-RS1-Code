@@ -43,6 +43,10 @@ ament_target_dependencies(irrigation_sim rclcpp std_msgs std_srvs geometry_msgs 
 
 add_executable(planting_site_markers src/planting_site_markers.cpp)
 ament_target_dependencies(planting_site_markers rclcpp std_msgs geometry_msgs visualization_msgs tf2 tf2_ros tf2_geometry_msgs)
+
+add_executable(seed_weight src/seed_weight.cpp)
+ament_target_dependencies(seed_weight rclcpp std_msgs std_srvs geometry_msgs)
+
 #chmod +x src/tcp_to_ros2.py
 #chmod +x src/task_order.py
 #chmod +x src/tcp_to_ros2_sunlight.py
@@ -52,6 +56,7 @@ ament_target_dependencies(planting_site_markers rclcpp std_msgs geometry_msgs vi
 install(TARGETS
   straight_drive
   water_level_sim
+  seed_weight
   soil_prep_fsm
   planting_sim           
   cover_sim              

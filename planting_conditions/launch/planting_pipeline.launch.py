@@ -23,6 +23,24 @@ def generate_launch_description():
             'wet_adc': 400,
         }],
     )
+    
+    seed_weight = Node(
+        package='planting_conditions',
+        executable='seed_weight',
+        name='planting_weight',
+        output='screen',
+        parameters=[{
+            'raw_zero': 0.0,
+            'raw_known': 10000.0,
+            'known_weight_g': 1000.0,
+            'empty_holder_g': 120.0,
+            'seed_mass_g': 0.040,
+            'low_threshold': 50,
+            'smooth_window': 10,
+            'publish_step_g': 5.0,
+            'raw_msg_type': 'float32',
+        }],
+    )
 
     planting_site_markers = Node(
         package='planting_conditions',
@@ -137,7 +155,7 @@ def generate_launch_description():
         sensor_bridge,         # start first
         planting_site_markers,
         water_level_sim,
-        # delayed_soil_prep,
+        seed_weight,
         soil_prep,
         planting,
         cover,

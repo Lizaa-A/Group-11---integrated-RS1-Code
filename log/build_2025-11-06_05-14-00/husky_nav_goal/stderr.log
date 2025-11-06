@@ -1,0 +1,11 @@
+gmake[2]: *** wait: No child processes.  Stop.
+gmake[2]: *** Waiting for unfinished jobs....
+gmake[2]: *** wait: No child processes.  Stop.
+gmake[2]: *** [CMakeFiles/goal_nav.dir/build.make:76: CMakeFiles/goal_nav.dir/src/goal_nav.cpp.o] Interrupt
+gmake[2]: *** [CMakeFiles/tsp_clearance_goals.dir/build.make:76: CMakeFiles/tsp_clearance_goals.dir/src/tsp_clearance_goals.cpp.o] Interrupt
+gmake[1]: *** [CMakeFiles/Makefile2:195: CMakeFiles/goal_nav.dir/all] Interrupt
+gmake[2]: *** [CMakeFiles/goals_markers.dir/build.make:76: CMakeFiles/goals_markers.dir/src/goals_markers.cpp.o] Interrupt
+gmake[1]: *** [CMakeFiles/Makefile2:169: CMakeFiles/tsp_clearance_goals.dir/all] Interrupt
+gmake[1]: *** [CMakeFiles/Makefile2:221: CMakeFiles/goal_tracker.dir/all] Error 2
+gmake[1]: *** [CMakeFiles/Makefile2:143: CMakeFiles/goals_markers.dir/all] Interrupt
+gmake: *** [Makefile:146: all] Interrupt

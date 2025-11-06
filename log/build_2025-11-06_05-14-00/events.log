@@ -1,0 +1,233 @@
+[0.000000] (-) TimerEvent: {}
+[0.000668] (41068_ignition_bringup) JobQueued: {'identifier': '41068_ignition_bringup', 'dependencies': OrderedDict()}
+[0.000709] (forest_clearance_detector) JobQueued: {'identifier': 'forest_clearance_detector', 'dependencies': OrderedDict()}
+[0.000748] (husky_nav_goal) JobQueued: {'identifier': 'husky_nav_goal', 'dependencies': OrderedDict()}
+[0.000777] (mission_fsm) JobQueued: {'identifier': 'mission_fsm', 'dependencies': OrderedDict()}
+[0.000796] (planting_conditions) JobQueued: {'identifier': 'planting_conditions', 'dependencies': OrderedDict()}
+[0.000815] (telemetry_node_pkg) JobQueued: {'identifier': 'telemetry_node_pkg', 'dependencies': OrderedDict()}
+[0.000834] (ugv_dashboard_gui) JobQueued: {'identifier': 'ugv_dashboard_gui', 'dependencies': OrderedDict()}
+[0.000852] (41068_ignition_bringup) JobStarted: {'identifier': '41068_ignition_bringup'}
+[0.007603] (forest_clearance_detector) JobStarted: {'identifier': 'forest_clearance_detector'}
+[0.012463] (husky_nav_goal) JobStarted: {'identifier': 'husky_nav_goal'}
+[0.018877] (mission_fsm) JobStarted: {'identifier': 'mission_fsm'}
+[0.021986] (planting_conditions) JobStarted: {'identifier': 'planting_conditions'}
+[0.026381] (telemetry_node_pkg) JobStarted: {'identifier': 'telemetry_node_pkg'}
+[0.033263] (ugv_dashboard_gui) JobStarted: {'identifier': 'ugv_dashboard_gui'}
+[0.042894] (41068_ignition_bringup) JobProgress: {'identifier': '41068_ignition_bringup', 'progress': 'cmake'}
+[0.043625] (41068_ignition_bringup) JobProgress: {'identifier': '41068_ignition_bringup', 'progress': 'build'}
+[0.044716] (41068_ignition_bringup) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/student/git/41068_ws/src/rs1_2025_soil/build/41068_ignition_bringup', '--', '-j8', '-l8'], 'cwd': '/home/student/git/41068_ws/src/rs1_2025_soil/build/41068_ignition_bringup', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'student'), ('SSH_AGENT_PID', '1428'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/student'), ('OLDPWD', '/home/student/git/41068_ws'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('SYSTEMD_EXEC_PID', '2243'), ('XRDP_PULSE_SOURCE_SOCKET', 'xrdp_chansrv_audio_in_socket_10'), ('XRDP_PULSE_SINK_SOCKET', 'xrdp_chansrv_audio_out_socket_10'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1002/bus'), ('COLORTERM', 'truecolor'), ('PULSE_SCRIPT', '/etc/xrdp/pulse/default.pa'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/student/git/41068_ws/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'student'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'), ('SESSION_MANAGER', 'local/labNVXMF8:@/tmp/.ICE-unix/1548,unix/labNVXMF8:/tmp/.ICE-unix/1548'), ('XDG_MENU_PREFIX', 'gnome-'), ('XRDP_SOCKET_PATH', '/run/xrdp/sockdir'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/caf6928d_274e_4dc3_9eaa_cc0c2ef90470'), ('XDG_RUNTIME_DIR', '/run/user/1002'), ('DISPLAY', ':10.0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('XMODIFIERS', '@im=ibus'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.90'), ('SSH_AUTH_SOCK', '/run/user/1002/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/opt/ros/humble'), ('UID', '1002'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('XRDP_SESSION', '1'), ('GPG_AGENT_INFO', '/run/user/1002/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', '/usr/share/gazebo-11/'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/student/git/41068_ws/src/rs1_2025_soil/build/41068_ignition_bringup'), ('QT_QPA_PLATFORM', 'xcb'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_DATA_DIRS', '/usr/share/gnome:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/student/git/41068_ws/build/ugv_dashboard_gui:/home/student/git/41068_ws/install/ugv_dashboard_gui/lib/python3.10/site-packages:/home/student/git/41068_ws/build/telemetry_node_pkg:/home/student/git/41068_ws/install/telemetry_node_pkg/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('SGX_AESM_ADDR', '1'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/opt/ros/humble')]), 'shell': False}
+[0.047447] (forest_clearance_detector) JobProgress: {'identifier': 'forest_clearance_detector', 'progress': 'cmake'}
+[0.048070] (forest_clearance_detector) JobProgress: {'identifier': 'forest_clearance_detector', 'progress': 'build'}
+[0.048861] (forest_clearance_detector) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/student/git/41068_ws/src/rs1_2025_soil/build/forest_clearance_detector', '--', '-j8', '-l8'], 'cwd': '/home/student/git/41068_ws/src/rs1_2025_soil/build/forest_clearance_detector', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'student'), ('SSH_AGENT_PID', '1428'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/student'), ('OLDPWD', '/home/student/git/41068_ws'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('SYSTEMD_EXEC_PID', '2243'), ('XRDP_PULSE_SOURCE_SOCKET', 'xrdp_chansrv_audio_in_socket_10'), ('XRDP_PULSE_SINK_SOCKET', 'xrdp_chansrv_audio_out_socket_10'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1002/bus'), ('COLORTERM', 'truecolor'), ('PULSE_SCRIPT', '/etc/xrdp/pulse/default.pa'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/student/git/41068_ws/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'student'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'), ('SESSION_MANAGER', 'local/labNVXMF8:@/tmp/.ICE-unix/1548,unix/labNVXMF8:/tmp/.ICE-unix/1548'), ('XDG_MENU_PREFIX', 'gnome-'), ('XRDP_SOCKET_PATH', '/run/xrdp/sockdir'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/caf6928d_274e_4dc3_9eaa_cc0c2ef90470'), ('XDG_RUNTIME_DIR', '/run/user/1002'), ('DISPLAY', ':10.0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('XMODIFIERS', '@im=ibus'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.90'), ('SSH_AUTH_SOCK', '/run/user/1002/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/opt/ros/humble'), ('UID', '1002'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('XRDP_SESSION', '1'), ('GPG_AGENT_INFO', '/run/user/1002/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', '/usr/share/gazebo-11/'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/student/git/41068_ws/src/rs1_2025_soil/build/forest_clearance_detector'), ('QT_QPA_PLATFORM', 'xcb'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_DATA_DIRS', '/usr/share/gnome:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/student/git/41068_ws/build/ugv_dashboard_gui:/home/student/git/41068_ws/install/ugv_dashboard_gui/lib/python3.10/site-packages:/home/student/git/41068_ws/build/telemetry_node_pkg:/home/student/git/41068_ws/install/telemetry_node_pkg/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('SGX_AESM_ADDR', '1'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/opt/ros/humble')]), 'shell': False}
+[0.050499] (husky_nav_goal) JobProgress: {'identifier': 'husky_nav_goal', 'progress': 'cmake'}
+[0.050738] (husky_nav_goal) JobProgress: {'identifier': 'husky_nav_goal', 'progress': 'build'}
+[0.051031] (husky_nav_goal) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/student/git/41068_ws/src/rs1_2025_soil/build/husky_nav_goal', '--', '-j8', '-l8'], 'cwd': '/home/student/git/41068_ws/src/rs1_2025_soil/build/husky_nav_goal', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'student'), ('SSH_AGENT_PID', '1428'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/student'), ('OLDPWD', '/home/student/git/41068_ws'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('SYSTEMD_EXEC_PID', '2243'), ('XRDP_PULSE_SOURCE_SOCKET', 'xrdp_chansrv_audio_in_socket_10'), ('XRDP_PULSE_SINK_SOCKET', 'xrdp_chansrv_audio_out_socket_10'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1002/bus'), ('COLORTERM', 'truecolor'), ('PULSE_SCRIPT', '/etc/xrdp/pulse/default.pa'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/student/git/41068_ws/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'student'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'), ('SESSION_MANAGER', 'local/labNVXMF8:@/tmp/.ICE-unix/1548,unix/labNVXMF8:/tmp/.ICE-unix/1548'), ('XDG_MENU_PREFIX', 'gnome-'), ('XRDP_SOCKET_PATH', '/run/xrdp/sockdir'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/caf6928d_274e_4dc3_9eaa_cc0c2ef90470'), ('XDG_RUNTIME_DIR', '/run/user/1002'), ('DISPLAY', ':10.0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('XMODIFIERS', '@im=ibus'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.90'), ('SSH_AUTH_SOCK', '/run/user/1002/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/opt/ros/humble'), ('UID', '1002'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('XRDP_SESSION', '1'), ('GPG_AGENT_INFO', '/run/user/1002/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', '/usr/share/gazebo-11/'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/student/git/41068_ws/src/rs1_2025_soil/build/husky_nav_goal'), ('QT_QPA_PLATFORM', 'xcb'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_DATA_DIRS', '/usr/share/gnome:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/student/git/41068_ws/build/ugv_dashboard_gui:/home/student/git/41068_ws/install/ugv_dashboard_gui/lib/python3.10/site-packages:/home/student/git/41068_ws/build/telemetry_node_pkg:/home/student/git/41068_ws/install/telemetry_node_pkg/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('SGX_AESM_ADDR', '1'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/opt/ros/humble')]), 'shell': False}
+[0.053404] (mission_fsm) JobProgress: {'identifier': 'mission_fsm', 'progress': 'cmake'}
+[0.053644] (mission_fsm) JobProgress: {'identifier': 'mission_fsm', 'progress': 'build'}
+[0.054623] (mission_fsm) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/student/git/41068_ws/src/rs1_2025_soil/build/mission_fsm', '--', '-j8', '-l8'], 'cwd': '/home/student/git/41068_ws/src/rs1_2025_soil/build/mission_fsm', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'student'), ('SSH_AGENT_PID', '1428'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/student'), ('OLDPWD', '/home/student/git/41068_ws'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('SYSTEMD_EXEC_PID', '2243'), ('XRDP_PULSE_SOURCE_SOCKET', 'xrdp_chansrv_audio_in_socket_10'), ('XRDP_PULSE_SINK_SOCKET', 'xrdp_chansrv_audio_out_socket_10'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1002/bus'), ('COLORTERM', 'truecolor'), ('PULSE_SCRIPT', '/etc/xrdp/pulse/default.pa'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/student/git/41068_ws/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'student'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'), ('SESSION_MANAGER', 'local/labNVXMF8:@/tmp/.ICE-unix/1548,unix/labNVXMF8:/tmp/.ICE-unix/1548'), ('XDG_MENU_PREFIX', 'gnome-'), ('XRDP_SOCKET_PATH', '/run/xrdp/sockdir'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/caf6928d_274e_4dc3_9eaa_cc0c2ef90470'), ('XDG_RUNTIME_DIR', '/run/user/1002'), ('DISPLAY', ':10.0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('XMODIFIERS', '@im=ibus'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.90'), ('SSH_AUTH_SOCK', '/run/user/1002/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/opt/ros/humble'), ('UID', '1002'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('XRDP_SESSION', '1'), ('GPG_AGENT_INFO', '/run/user/1002/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', '/usr/share/gazebo-11/'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/student/git/41068_ws/src/rs1_2025_soil/build/mission_fsm'), ('QT_QPA_PLATFORM', 'xcb'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_DATA_DIRS', '/usr/share/gnome:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/student/git/41068_ws/build/ugv_dashboard_gui:/home/student/git/41068_ws/install/ugv_dashboard_gui/lib/python3.10/site-packages:/home/student/git/41068_ws/build/telemetry_node_pkg:/home/student/git/41068_ws/install/telemetry_node_pkg/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('SGX_AESM_ADDR', '1'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/opt/ros/humble')]), 'shell': False}
+[0.056343] (planting_conditions) JobProgress: {'identifier': 'planting_conditions', 'progress': 'cmake'}
+[0.057241] (planting_conditions) JobProgress: {'identifier': 'planting_conditions', 'progress': 'build'}
+[0.057872] (planting_conditions) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions', '--', '-j8', '-l8'], 'cwd': '/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'student'), ('SSH_AGENT_PID', '1428'), ('XDG_SESSION_TYPE', 'x11'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/gazebo-11/plugins:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib'), ('HOME', '/home/student'), ('OLDPWD', '/home/student/git/41068_ws'), ('ROS_PYTHON_VERSION', '3'), ('GNOME_SHELL_SESSION_MODE', 'ubuntu'), ('GTK_MODULES', 'gail:atk-bridge'), ('SYSTEMD_EXEC_PID', '2243'), ('XRDP_PULSE_SOURCE_SOCKET', 'xrdp_chansrv_audio_in_socket_10'), ('XRDP_PULSE_SINK_SOCKET', 'xrdp_chansrv_audio_out_socket_10'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1002/bus'), ('COLORTERM', 'truecolor'), ('PULSE_SCRIPT', '/etc/xrdp/pulse/default.pa'), ('IM_CONFIG_PHASE', '1'), ('COLCON_PREFIX_PATH', '/home/student/git/41068_ws/install'), ('ROS_DISTRO', 'humble'), ('GTK_IM_MODULE', 'ibus'), ('LOGNAME', 'student'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('XDG_SESSION_CLASS', 'user'), ('TERM', 'xterm-256color'), ('GNOME_DESKTOP_SESSION_ID', 'this-is-deprecated'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'), ('SESSION_MANAGER', 'local/labNVXMF8:@/tmp/.ICE-unix/1548,unix/labNVXMF8:/tmp/.ICE-unix/1548'), ('XDG_MENU_PREFIX', 'gnome-'), ('XRDP_SOCKET_PATH', '/run/xrdp/sockdir'), ('GNOME_TERMINAL_SCREEN', '/org/gnome/Terminal/screen/caf6928d_274e_4dc3_9eaa_cc0c2ef90470'), ('XDG_RUNTIME_DIR', '/run/user/1002'), ('DISPLAY', ':10.0'), ('LANG', 'en_US.UTF-8'), ('XDG_CURRENT_DESKTOP', 'ubuntu:GNOME'), ('XMODIFIERS', '@im=ibus'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('GNOME_TERMINAL_SERVICE', ':1.90'), ('SSH_AUTH_SOCK', '/run/user/1002/keyring/ssh'), ('AMENT_PREFIX_PATH', '/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/opt/ros/humble'), ('UID', '1002'), ('SHELL', '/bin/bash'), ('QT_ACCESSIBILITY', '1'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('XRDP_SESSION', '1'), ('GPG_AGENT_INFO', '/run/user/1002/gnupg/S.gpg-agent:0:1'), ('GAZEBO_RESOURCE_PATH', '/usr/share/gazebo-11/'), ('QT_IM_MODULE', 'ibus'), ('PWD', '/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions'), ('QT_QPA_PLATFORM', 'xcb'), ('LC_ALL', 'en_US.UTF-8'), ('XDG_DATA_DIRS', '/usr/share/gnome:/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop'), ('PYTHONPATH', '/home/student/git/41068_ws/build/ugv_dashboard_gui:/home/student/git/41068_ws/install/ugv_dashboard_gui/lib/python3.10/site-packages:/home/student/git/41068_ws/build/telemetry_node_pkg:/home/student/git/41068_ws/install/telemetry_node_pkg/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages'), ('SGX_AESM_ADDR', '1'), ('COLCON', '1'), ('VTE_VERSION', '6800'), ('CMAKE_PREFIX_PATH', '/home/student/git/41068_ws/install/planting_conditions:/home/student/git/41068_ws/install/mission_fsm:/home/student/git/41068_ws/install/husky_nav_goal:/home/student/git/41068_ws/install/forest_clearance_detector:/home/student/git/41068_ws/install/41068_ignition_bringup:/home/student/git/41068_ws/install/ugv_dashboard_gui:/home/student/git/41068_ws/install/telemetry_node_pkg:/opt/ros/humble')]), 'shell': False}
+[0.100828] (-) TimerEvent: {}
+[0.201329] (-) TimerEvent: {}
+[0.301851] (-) TimerEvent: {}
+[0.406821] (-) TimerEvent: {}
+[0.507290] (-) TimerEvent: {}
+[0.607825] (-) TimerEvent: {}
+[0.708397] (-) TimerEvent: {}
+[0.808925] (-) TimerEvent: {}
+[0.911831] (-) TimerEvent: {}
+[1.012353] (-) TimerEvent: {}
+[1.113110] (-) TimerEvent: {}
+[1.208014] (41068_ignition_bringup) StderrLine: {'line': b'\x1b[0mCMake Error: The current CMakeCache.txt directory /home/student/git/41068_ws/src/rs1_2025_soil/build/41068_ignition_bringup/CMakeCache.txt is different than the directory /home/sophie/git/rs1_2025_soil/build/41068_ignition_bringup where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt\x1b[0m\n'}
+[1.208311] (41068_ignition_bringup) StderrLine: {'line': b'\x1b[0mCMake Error: The source directory "/home/sophie/git/rs1_2025_soil/41068_ignition_bringup" does not exist.\n'}
+[1.208454] (41068_ignition_bringup) StderrLine: {'line': b'Specify --help for usage, or press the help button on the CMake GUI.\x1b[0m\n'}
+[1.208561] (41068_ignition_bringup) StderrLine: {'line': b'gmake: *** [Makefile:226: cmake_check_build_system] Error 1\n'}
+[1.216131] (-) TimerEvent: {}
+[1.217829] (forest_clearance_detector) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/rotating_clearance_detector.dir/src/rotating_clearance_detector.cpp.o\x1b[0m\n'}
+[1.218077] (forest_clearance_detector) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/goals_markers.dir/src/goals_markers.cpp.o\x1b[0m\n'}
+[1.224540] (husky_nav_goal) StdoutLine: {'line': b'[ 12%] \x1b[32mBuilding CXX object CMakeFiles/goals_markers.dir/src/goals_markers.cpp.o\x1b[0m\n'}
+[1.224816] (husky_nav_goal) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/tsp_clearance_goals.dir/src/tsp_clearance_goals.cpp.o\x1b[0m\n'}
+[1.224959] (husky_nav_goal) StdoutLine: {'line': b'[ 37%] \x1b[32mBuilding CXX object CMakeFiles/goal_tracker.dir/src/goal_tracker.cpp.o\x1b[0m\n'}
+[1.225065] (husky_nav_goal) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/goal_nav.dir/src/goal_nav.cpp.o\x1b[0m\n'}
+[1.228992] (mission_fsm) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/mission_fsm_node.dir/src/mission_fsm_node.cpp.o\x1b[0m\n'}
+[1.237318] (planting_conditions) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.12 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[1.237564] (planting_conditions) StdoutLine: {'line': b'-- Override CMake install command with custom implementation using symlinks instead of copying resources\n'}
+[1.237694] (planting_conditions) StdoutLine: {'line': b'-- Found rclcpp: 16.0.15 (/opt/ros/humble/share/rclcpp/cmake)\n'}
+[1.237836] (planting_conditions) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.7 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[1.237942] (planting_conditions) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.7 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[1.238039] (planting_conditions) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.7 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[1.238130] (planting_conditions) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[1.238222] (planting_conditions) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[1.238328] (planting_conditions) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[1.238422] (planting_conditions) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.9 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[1.238524] (planting_conditions) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[1.238624] (planting_conditions) StdoutLine: {'line': b'-- Found geometry_msgs: 4.9.0 (/opt/ros/humble/share/geometry_msgs/cmake)\n'}
+[1.238717] (planting_conditions) StdoutLine: {'line': b'-- Found std_srvs: 4.9.0 (/opt/ros/humble/share/std_srvs/cmake)\n'}
+[1.238844] (planting_conditions) StdoutLine: {'line': b'-- Found visualization_msgs: 4.9.0 (/opt/ros/humble/share/visualization_msgs/cmake)\n'}
+[1.238940] (planting_conditions) StdoutLine: {'line': b'-- Found nav_msgs: 4.9.0 (/opt/ros/humble/share/nav_msgs/cmake)\n'}
+[1.239032] (planting_conditions) StdoutLine: {'line': b'-- Found tf2: 0.25.16 (/opt/ros/humble/share/tf2/cmake)\n'}
+[1.239122] (planting_conditions) StdoutLine: {'line': b'-- Found tf2_ros: 0.25.16 (/opt/ros/humble/share/tf2_ros/cmake)\n'}
+[1.239210] (planting_conditions) StdoutLine: {'line': b'-- Found tf2_geometry_msgs: 0.25.16 (/opt/ros/humble/share/tf2_geometry_msgs/cmake)\n'}
+[1.239304] (planting_conditions) StdoutLine: {'line': b'-- Found eigen3_cmake_module: 0.1.1 (/opt/ros/humble/share/eigen3_cmake_module/cmake)\n'}
+[1.239403] (planting_conditions) StdoutLine: {'line': b'-- Ensuring Eigen3 include directory is part of orocos-kdl CMake target\n'}
+[1.268855] (41068_ignition_bringup) CommandEnded: {'returncode': 2}
+[1.301764] (41068_ignition_bringup) JobEnded: {'identifier': '41068_ignition_bringup', 'rc': 2}
+[1.303075] (telemetry_node_pkg) JobEnded: {'identifier': 'telemetry_node_pkg', 'rc': 'SIGINT'}
+[1.303575] (ugv_dashboard_gui) JobEnded: {'identifier': 'ugv_dashboard_gui', 'rc': 'SIGINT'}
+[1.316261] (-) TimerEvent: {}
+[1.324798] (planting_conditions) StdoutLine: {'line': b'-- Configuring done\n'}
+[1.416424] (-) TimerEvent: {}
+[1.429914] (planting_conditions) StdoutLine: {'line': b'-- Generating done\n'}
+[1.475222] (planting_conditions) StdoutLine: {'line': b'-- Build files have been written to: /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions\n'}
+[1.516591] (-) TimerEvent: {}
+[1.579863] (planting_conditions) StdoutLine: {'line': b'[  6%] \x1b[32mBuilding CXX object CMakeFiles/soil_prep_fsm.dir/src/soil_prep_fsm.cpp.o\x1b[0m\n'}
+[1.585899] (planting_conditions) StdoutLine: {'line': b'[ 12%] \x1b[32mBuilding CXX object CMakeFiles/cover_sim.dir/src/cover_sim.cpp.o\x1b[0m\n'}
+[1.587111] (planting_conditions) StdoutLine: {'line': b'[ 18%] \x1b[32mBuilding CXX object CMakeFiles/water_level_sim.dir/src/water_level_sim.cpp.o\x1b[0m\n'}
+[1.590149] (planting_conditions) StdoutLine: {'line': b'[ 25%] \x1b[32mBuilding CXX object CMakeFiles/straight_drive.dir/src/straight_drive.cpp.o\x1b[0m\n'}
+[1.595583] (planting_conditions) StdoutLine: {'line': b'[ 31%] \x1b[32mBuilding CXX object CMakeFiles/planting_sim.dir/src/planting_sim.cpp.o\x1b[0m\n'}
+[1.609193] (planting_conditions) StdoutLine: {'line': b'[ 37%] \x1b[32mBuilding CXX object CMakeFiles/irrigation_sim.dir/src/irrigation_sim.cpp.o\x1b[0m\n'}
+[1.616683] (-) TimerEvent: {}
+[1.625030] (planting_conditions) StdoutLine: {'line': b'[ 43%] \x1b[32mBuilding CXX object CMakeFiles/planting_site_markers.dir/src/planting_site_markers.cpp.o\x1b[0m\n'}
+[1.632800] (planting_conditions) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/seed_weight.dir/src/seed_weight.cpp.o\x1b[0m\n'}
+[1.716844] (-) TimerEvent: {}
+[1.817376] (-) TimerEvent: {}
+[1.920846] (-) TimerEvent: {}
+[2.023834] (-) TimerEvent: {}
+[2.124365] (-) TimerEvent: {}
+[2.228837] (-) TimerEvent: {}
+[2.329379] (-) TimerEvent: {}
+[2.435198] (-) TimerEvent: {}
+[2.535719] (-) TimerEvent: {}
+[2.636280] (-) TimerEvent: {}
+[2.738848] (-) TimerEvent: {}
+[2.840849] (-) TimerEvent: {}
+[2.941637] (-) TimerEvent: {}
+[3.046597] (-) TimerEvent: {}
+[3.147148] (-) TimerEvent: {}
+[3.247690] (-) TimerEvent: {}
+[3.353013] (-) TimerEvent: {}
+[3.458850] (-) TimerEvent: {}
+[3.560843] (-) TimerEvent: {}
+[3.661390] (-) TimerEvent: {}
+[3.761951] (-) TimerEvent: {}
+[3.867846] (-) TimerEvent: {}
+[3.968400] (-) TimerEvent: {}
+[4.068995] (-) TimerEvent: {}
+[4.169770] (-) TimerEvent: {}
+[4.273847] (-) TimerEvent: {}
+[4.377841] (-) TimerEvent: {}
+[4.478397] (-) TimerEvent: {}
+[4.582846] (-) TimerEvent: {}
+[4.683419] (-) TimerEvent: {}
+[4.784181] (-) TimerEvent: {}
+[4.884724] (-) TimerEvent: {}
+[4.986842] (-) TimerEvent: {}
+[5.087386] (-) TimerEvent: {}
+[5.187985] (-) TimerEvent: {}
+[5.291845] (-) TimerEvent: {}
+[5.392395] (-) TimerEvent: {}
+[5.492931] (-) TimerEvent: {}
+[5.593471] (-) TimerEvent: {}
+[5.694018] (-) TimerEvent: {}
+[5.794778] (-) TimerEvent: {}
+[5.895515] (-) TimerEvent: {}
+[5.998248] (-) TimerEvent: {}
+[6.098794] (-) TimerEvent: {}
+[6.204844] (-) TimerEvent: {}
+[6.305358] (-) TimerEvent: {}
+[6.405839] (-) TimerEvent: {}
+[6.506384] (-) TimerEvent: {}
+[6.610832] (-) TimerEvent: {}
+[6.714849] (-) TimerEvent: {}
+[6.815403] (-) TimerEvent: {}
+[6.916246] (-) TimerEvent: {}
+[7.017106] (-) TimerEvent: {}
+[7.117798] (-) TimerEvent: {}
+[7.221108] (-) TimerEvent: {}
+[7.323864] (-) TimerEvent: {}
+[7.424408] (-) TimerEvent: {}
+[7.525263] (-) TimerEvent: {}
+[7.626160] (-) TimerEvent: {}
+[7.727033] (-) TimerEvent: {}
+[7.829077] (-) TimerEvent: {}
+[7.930850] (-) TimerEvent: {}
+[8.031396] (-) TimerEvent: {}
+[8.134404] (-) TimerEvent: {}
+[8.236847] (-) TimerEvent: {}
+[8.339847] (-) TimerEvent: {}
+[8.442848] (-) TimerEvent: {}
+[8.543390] (-) TimerEvent: {}
+[8.646848] (-) TimerEvent: {}
+[8.747392] (-) TimerEvent: {}
+[8.847943] (-) TimerEvent: {}
+[8.951848] (-) TimerEvent: {}
+[9.052389] (-) TimerEvent: {}
+[9.155022] (-) TimerEvent: {}
+[9.258050] (-) TimerEvent: {}
+[9.358823] (-) TimerEvent: {}
+[9.462867] (-) TimerEvent: {}
+[9.570844] (-) TimerEvent: {}
+[9.671401] (-) TimerEvent: {}
+[9.772041] (-) TimerEvent: {}
+[9.874854] (-) TimerEvent: {}
+[9.975594] (-) TimerEvent: {}
+[10.076157] (-) TimerEvent: {}
+[10.179866] (-) TimerEvent: {}
+[10.280518] (-) TimerEvent: {}
+[10.384851] (-) TimerEvent: {}
+[10.490846] (-) TimerEvent: {}
+[10.591355] (-) TimerEvent: {}
+[10.695845] (-) TimerEvent: {}
+[10.796372] (-) TimerEvent: {}
+[10.896942] (-) TimerEvent: {}
+[10.997628] (-) TimerEvent: {}
+[11.100847] (-) TimerEvent: {}
+[11.193664] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/irrigation_sim.dir/build.make:76: CMakeFiles/irrigation_sim.dir/src/irrigation_sim.cpp.o] Interrupt\n'}
+[11.194966] (planting_conditions) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:281: CMakeFiles/irrigation_sim.dir/all] Interrupt\n'}
+[11.195131] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/planting_sim.dir/build.make:76: CMakeFiles/planting_sim.dir/src/planting_sim.cpp.o] Interrupt\n'}
+[11.195217] (planting_conditions) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:229: CMakeFiles/planting_sim.dir/all] Interrupt\n'}
+[11.195316] (forest_clearance_detector) StderrLine: {'line': b'gmake[2]: *** wait: No child processes.  Stop.\n'}
+[11.195438] (forest_clearance_detector) StderrLine: {'line': b'gmake[2]: *** Waiting for unfinished jobs....\n'}
+[11.195532] (forest_clearance_detector) StderrLine: {'line': b'gmake[2]: *** wait: No child processes.  Stop.\n'}
+[11.195608] (forest_clearance_detector) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:139: CMakeFiles/goals_markers.dir/all] Error 2\n'}
+[11.195681] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** wait: No child processes.  Stop.\n'}
+[11.195824] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** Waiting for unfinished jobs....\n'}
+[11.195904] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** wait: No child processes.  Stop.\n'}
+[11.195982] (planting_conditions) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:333: CMakeFiles/seed_weight.dir/all] Error 2\n'}
+[11.196057] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/cover_sim.dir/build.make:76: CMakeFiles/cover_sim.dir/src/cover_sim.cpp.o] Interrupt\n'}
+[11.196143] (planting_conditions) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:255: CMakeFiles/cover_sim.dir/all] Interrupt\n'}
+[11.196212] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/soil_prep_fsm.dir/build.make:76: CMakeFiles/soil_prep_fsm.dir/src/soil_prep_fsm.cpp.o] Interrupt\n'}
+[11.196292] (planting_conditions) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:151: CMakeFiles/soil_prep_fsm.dir/all] Interrupt\n'}
+[11.197802] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/planting_site_markers.dir/build.make:76: CMakeFiles/planting_site_markers.dir/src/planting_site_markers.cpp.o] Interrupt\n'}
+[11.198494] (planting_conditions) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:307: CMakeFiles/planting_site_markers.dir/all] Interrupt\n'}
+[11.198608] (husky_nav_goal) StderrLine: {'line': b'gmake[2]: *** wait: No child processes.  Stop.\n'}
+[11.198754] (husky_nav_goal) StderrLine: {'line': b'gmake[2]: *** Waiting for unfinished jobs....\n'}
+[11.198868] (husky_nav_goal) StderrLine: {'line': b'gmake[2]: *** wait: No child processes.  Stop.\n'}
+[11.198954] (mission_fsm) StderrLine: {'line': b'gmake[2]: *** wait: No child processes.  Stop.\n'}
+[11.199095] (mission_fsm) StderrLine: {'line': b'gmake[2]: *** Waiting for unfinished jobs....\n'}
+[11.199199] (mission_fsm) StderrLine: {'line': b'gmake[2]: *** wait: No child processes.  Stop.\n'}
+[11.199275] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/straight_drive.dir/build.make:76: CMakeFiles/straight_drive.dir/src/straight_drive.cpp.o] Interrupt\n'}
+[11.199360] (planting_conditions) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:177: CMakeFiles/straight_drive.dir/all] Interrupt\n'}
+[11.199438] (forest_clearance_detector) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/rotating_clearance_detector.dir/build.make:76: CMakeFiles/rotating_clearance_detector.dir/src/rotating_clearance_detector.cpp.o] Interrupt\n'}
+[11.200160] (forest_clearance_detector) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:165: CMakeFiles/rotating_clearance_detector.dir/all] Interrupt\n'}
+[11.200306] (forest_clearance_detector) StderrLine: {'line': b'gmake: *** [Makefile:146: all] Interrupt\n'}
+[11.200448] (husky_nav_goal) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/goal_nav.dir/build.make:76: CMakeFiles/goal_nav.dir/src/goal_nav.cpp.o] Interrupt\n'}
+[11.200709] (husky_nav_goal) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/tsp_clearance_goals.dir/build.make:76: CMakeFiles/tsp_clearance_goals.dir/src/tsp_clearance_goals.cpp.o] Interrupt\n'}
+[11.200812] (husky_nav_goal) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:195: CMakeFiles/goal_nav.dir/all] Interrupt\n'}
+[11.205896] (-) TimerEvent: {}
+[11.206079] (husky_nav_goal) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/goals_markers.dir/build.make:76: CMakeFiles/goals_markers.dir/src/goals_markers.cpp.o] Interrupt\n'}
+[11.206194] (husky_nav_goal) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:169: CMakeFiles/tsp_clearance_goals.dir/all] Interrupt\n'}
+[11.206276] (husky_nav_goal) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:221: CMakeFiles/goal_tracker.dir/all] Error 2\n'}
+[11.206352] (mission_fsm) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/mission_fsm_node.dir/all] Error 2\n'}
+[11.206876] (planting_conditions) StderrLine: {'line': b'gmake[2]: *** [CMakeFiles/water_level_sim.dir/build.make:76: CMakeFiles/water_level_sim.dir/src/water_level_sim.cpp.o] Interrupt\n'}
+[11.206978] (mission_fsm) StderrLine: {'line': b'gmake: *** [Makefile:146: all] Interrupt\n'}
+[11.207597] (planting_conditions) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:203: CMakeFiles/water_level_sim.dir/all] Interrupt\n'}
+[11.207750] (planting_conditions) StderrLine: {'line': b'gmake: *** [Makefile:146: all] Interrupt\n'}
+[11.207839] (husky_nav_goal) StderrLine: {'line': b'gmake[1]: *** [CMakeFiles/Makefile2:143: CMakeFiles/goals_markers.dir/all] Interrupt\n'}
+[11.208397] (husky_nav_goal) StderrLine: {'line': b'gmake: *** [Makefile:146: all] Interrupt\n'}
+[11.215939] (husky_nav_goal) JobEnded: {'identifier': 'husky_nav_goal', 'rc': 'SIGINT'}
+[11.217364] (mission_fsm) JobEnded: {'identifier': 'mission_fsm', 'rc': 'SIGINT'}
+[11.217672] (planting_conditions) JobEnded: {'identifier': 'planting_conditions', 'rc': 'SIGINT'}
+[11.218034] (forest_clearance_detector) JobEnded: {'identifier': 'forest_clearance_detector', 'rc': 'SIGINT'}
+[11.227868] (-) EventReactorShutdown: {}

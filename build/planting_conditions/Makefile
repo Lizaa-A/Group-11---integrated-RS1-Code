@@ -288,6 +288,19 @@ planting_site_markers/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/planting_site_markers.dir/build.make CMakeFiles/planting_site_markers.dir/build
 .PHONY : planting_site_markers/fast
 
+#=============================================================================
+# Target rules for targets named seed_weight
+
+# Build rule for target.
+seed_weight: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 seed_weight
+.PHONY : seed_weight
+
+# fast build rule for target.
+seed_weight/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seed_weight.dir/build.make CMakeFiles/seed_weight.dir/build
+.PHONY : seed_weight/fast
+
 src/cover_sim.o: src/cover_sim.cpp.o
 .PHONY : src/cover_sim.o
 
@@ -384,6 +397,30 @@ src/planting_site_markers.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/planting_site_markers.dir/build.make CMakeFiles/planting_site_markers.dir/src/planting_site_markers.cpp.s
 .PHONY : src/planting_site_markers.cpp.s
 
+src/seed_weight.o: src/seed_weight.cpp.o
+.PHONY : src/seed_weight.o
+
+# target to build an object file
+src/seed_weight.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seed_weight.dir/build.make CMakeFiles/seed_weight.dir/src/seed_weight.cpp.o
+.PHONY : src/seed_weight.cpp.o
+
+src/seed_weight.i: src/seed_weight.cpp.i
+.PHONY : src/seed_weight.i
+
+# target to preprocess a source file
+src/seed_weight.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seed_weight.dir/build.make CMakeFiles/seed_weight.dir/src/seed_weight.cpp.i
+.PHONY : src/seed_weight.cpp.i
+
+src/seed_weight.s: src/seed_weight.cpp.s
+.PHONY : src/seed_weight.s
+
+# target to generate assembly for a file
+src/seed_weight.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seed_weight.dir/build.make CMakeFiles/seed_weight.dir/src/seed_weight.cpp.s
+.PHONY : src/seed_weight.cpp.s
+
 src/soil_prep_fsm.o: src/soil_prep_fsm.cpp.o
 .PHONY : src/soil_prep_fsm.o
 
@@ -475,6 +512,7 @@ help:
 	@echo "... irrigation_sim"
 	@echo "... planting_sim"
 	@echo "... planting_site_markers"
+	@echo "... seed_weight"
 	@echo "... soil_prep_fsm"
 	@echo "... straight_drive"
 	@echo "... water_level_sim"
@@ -490,6 +528,9 @@ help:
 	@echo "... src/planting_site_markers.o"
 	@echo "... src/planting_site_markers.i"
 	@echo "... src/planting_site_markers.s"
+	@echo "... src/seed_weight.o"
+	@echo "... src/seed_weight.i"
+	@echo "... src/seed_weight.s"
 	@echo "... src/soil_prep_fsm.o"
 	@echo "... src/soil_prep_fsm.i"
 	@echo "... src/soil_prep_fsm.s"

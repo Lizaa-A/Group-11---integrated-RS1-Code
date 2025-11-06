@@ -7,6 +7,7 @@
 /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles/cover_sim.dir
 /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles/irrigation_sim.dir
 /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles/planting_site_markers.dir
+/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles/seed_weight.dir
 /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles/test.dir
 /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles/edit_cache.dir
 /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles/rebuild_cache.dir

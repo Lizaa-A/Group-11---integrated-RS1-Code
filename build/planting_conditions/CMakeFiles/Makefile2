@@ -70,6 +70,7 @@ all: CMakeFiles/planting_sim.dir/all
 all: CMakeFiles/cover_sim.dir/all
 all: CMakeFiles/irrigation_sim.dir/all
 all: CMakeFiles/planting_site_markers.dir/all
+all: CMakeFiles/seed_weight.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -86,6 +87,7 @@ clean: CMakeFiles/planting_sim.dir/clean
 clean: CMakeFiles/cover_sim.dir/clean
 clean: CMakeFiles/irrigation_sim.dir/clean
 clean: CMakeFiles/planting_site_markers.dir/clean
+clean: CMakeFiles/seed_weight.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -147,7 +149,7 @@ CMakeFiles/planting_conditions_uninstall.dir/clean:
 CMakeFiles/soil_prep_fsm.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/soil_prep_fsm.dir/build.make CMakeFiles/soil_prep_fsm.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/soil_prep_fsm.dir/build.make CMakeFiles/soil_prep_fsm.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles --progress-num=9,10 "Built target soil_prep_fsm"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles --progress-num=11,12 "Built target soil_prep_fsm"
 .PHONY : CMakeFiles/soil_prep_fsm.dir/all
 
 # Build rule for subdir invocation for target.
@@ -173,7 +175,7 @@ CMakeFiles/soil_prep_fsm.dir/clean:
 CMakeFiles/straight_drive.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/straight_drive.dir/build.make CMakeFiles/straight_drive.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/straight_drive.dir/build.make CMakeFiles/straight_drive.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles --progress-num=11,12 "Built target straight_drive"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles --progress-num=13,14 "Built target straight_drive"
 .PHONY : CMakeFiles/straight_drive.dir/all
 
 # Build rule for subdir invocation for target.
@@ -199,7 +201,7 @@ CMakeFiles/straight_drive.dir/clean:
 CMakeFiles/water_level_sim.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/water_level_sim.dir/build.make CMakeFiles/water_level_sim.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/water_level_sim.dir/build.make CMakeFiles/water_level_sim.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles --progress-num=13,14 "Built target water_level_sim"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles --progress-num=15,16 "Built target water_level_sim"
 .PHONY : CMakeFiles/water_level_sim.dir/all
 
 # Build rule for subdir invocation for target.
@@ -321,6 +323,32 @@ planting_site_markers: CMakeFiles/planting_site_markers.dir/rule
 CMakeFiles/planting_site_markers.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/planting_site_markers.dir/build.make CMakeFiles/planting_site_markers.dir/clean
 .PHONY : CMakeFiles/planting_site_markers.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/seed_weight.dir
+
+# All Build rule for target.
+CMakeFiles/seed_weight.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seed_weight.dir/build.make CMakeFiles/seed_weight.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seed_weight.dir/build.make CMakeFiles/seed_weight.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles --progress-num=9,10 "Built target seed_weight"
+.PHONY : CMakeFiles/seed_weight.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/seed_weight.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/seed_weight.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/git/41068_ws/src/rs1_2025_soil/build/planting_conditions/CMakeFiles 0
+.PHONY : CMakeFiles/seed_weight.dir/rule
+
+# Convenience name for target.
+seed_weight: CMakeFiles/seed_weight.dir/rule
+.PHONY : seed_weight
+
+# clean rule for target.
+CMakeFiles/seed_weight.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/seed_weight.dir/build.make CMakeFiles/seed_weight.dir/clean
+.PHONY : CMakeFiles/seed_weight.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
