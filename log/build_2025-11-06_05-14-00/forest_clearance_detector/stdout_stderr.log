@@ -1,9 +1,0 @@
-[ 25%] [32mBuilding CXX object CMakeFiles/rotating_clearance_detector.dir/src/rotating_clearance_detector.cpp.o[0m
-[ 50%] [32mBuilding CXX object CMakeFiles/goals_markers.dir/src/goals_markers.cpp.o[0m
-gmake[2]: *** wait: No child processes.  Stop.
-gmake[2]: *** Waiting for unfinished jobs....
-gmake[2]: *** wait: No child processes.  Stop.
-gmake[1]: *** [CMakeFiles/Makefile2:139: CMakeFiles/goals_markers.dir/all] Error 2
-gmake[2]: *** [CMakeFiles/rotating_clearance_detector.dir/build.make:76: CMakeFiles/rotating_clearance_detector.dir/src/rotating_clearance_detector.cpp.o] Interrupt
-gmake[1]: *** [CMakeFiles/Makefile2:165: CMakeFiles/rotating_clearance_detector.dir/all] Interrupt
-gmake: *** [Makefile:146: all] Interrupt

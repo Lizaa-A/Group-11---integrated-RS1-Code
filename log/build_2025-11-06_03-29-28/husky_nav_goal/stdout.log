@@ -1,4 +1,0 @@
-[ 12%] [32mBuilding CXX object CMakeFiles/tsp_clearance_goals.dir/src/tsp_clearance_goals.cpp.o[0m
-[ 25%] [32mBuilding CXX object CMakeFiles/goal_tracker.dir/src/goal_tracker.cpp.o[0m
-[ 37%] [32mBuilding CXX object CMakeFiles/goal_nav.dir/src/goal_nav.cpp.o[0m
-[ 50%] [32mBuilding CXX object CMakeFiles/goals_markers.dir/src/goals_markers.cpp.o[0m

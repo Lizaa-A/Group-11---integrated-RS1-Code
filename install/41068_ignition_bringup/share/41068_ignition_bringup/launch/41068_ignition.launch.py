@@ -1,1 +1,0 @@
-/home/sophie/git/rs1_2025_soil/41068_ignition_bringup/launch/41068_ignition.launch.py
