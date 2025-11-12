@@ -62,21 +62,9 @@ def generate_launch_description():
             ])
         ),
         launch_arguments={
-        #     'use_sim_time': use_sim_time,
-        #     'publish_initialpose': initpose,
-        #     'require_permission': require_perm,
         }.items(),
     )
-
-    # -------------------------------------------------
-    # forest clearance detector node, might have to change this later to be pkg if adding costmap stuff into forest_clearance_detector
-    # -------------------------------------------------
-    # clearance_node = Node(
-    #         package='forest_clearance_detector',
-    #         executable='rotating_clearance_detector',
-    #         name='rotating_clearance_detector',
-    #         output='screen'
-    # )
+ 
     
     forest_clearance_share = FindPackageShare('forest_clearance_detector')
 

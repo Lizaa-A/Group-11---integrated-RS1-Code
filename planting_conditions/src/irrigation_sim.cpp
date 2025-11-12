@@ -31,7 +31,7 @@ public:
     odom_topic_        = declare_parameter<std::string>("odom_topic", "/odom");
     fallback_time_s_   = declare_parameter("fallback_time_s", 6.0);   // if no strip length/odom, time fallback
 
-    // --- Subscriptions
+    // Subscriptions
     // low tank flag
     low_sub_ = create_subscription<std_msgs::msg::Bool>(
       "/water_tank/low", 10, [this](std_msgs::msg::Bool::SharedPtr m){ low_ = m->data; });
@@ -52,12 +52,12 @@ public:
         last_odom_ = *o; have_odom_ = true;
       });
 
-    // --- Publishers
+    // Publishers
     flow_pub_ = create_publisher<std_msgs::msg::Int32>("/water_tank/flow_lps", 10);
     done_pub_ = create_publisher<std_msgs::msg::Bool>("/irrigate/done", 10);
     cmd_pub_  = create_publisher<geometry_msgs::msg::Twist>(cmd_vel_topic_, 10);
 
-    // --- Optional refill client
+    //  refill client
     refill_cli_ = create_client<std_srvs::srv::Empty>("/water_tank/refill");
 
     // --- Start service
@@ -123,21 +123,20 @@ private:
   void tick(){
     if(!active_) return;
 
-    // If we are paused due to low tank, wait here until it is refilled
+    // If aused due to low tank, wait here until it is refilled
     if (paused_low_) {
       stop_motion();
       set_flow(0);
       if (!low_) {
         // resume
         if (using_time_fallback_) {
-          // extend deadline by the pause duration
           t_end_ = t_end_ + (now() - pause_start_);
         }
         paused_low_ = false;
         RCLCPP_INFO(get_logger(),"Resuming irrigation after refill.");
       } else {
-        maybe_refill();   // optional: try auto-refill if enabled
-        return;           // stay paused
+        maybe_refill();  
+        return;           
       }
     }
 
@@ -147,7 +146,7 @@ private:
       pause_start_ = now();
       stop_motion();
       set_flow(0);
-      maybe_refill();     // optional auto-refill
+      maybe_refill();     
       return;
     }
 
@@ -164,7 +163,6 @@ private:
           finish(true);
         }
       } else {
-        // lost odom mid-run → stop safely
         RCLCPP_WARN(get_logger(),"Lost odometry during irrigation; stopping.");
         finish(false);
       }

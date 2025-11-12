@@ -58,11 +58,8 @@ class SinglePortTcpToRos(Node):
                     s = line.decode('utf-8', errors='ignore').strip()
                     if not s: 
                         continue
-
-                    # Expect lines like: "SUN:27" or "SOIL:412"
                     m = re.match(r'^\s*(SUN|SOIL)\s*:\s*(-?\d+)\s*$', s, re.IGNORECASE)
                     if not m:
-                        # Also accept bare ints (assume soil)
                         n = self._parse_any_int(s)
                         if n is None:
                             self.get_logger().warn(f"Ignoring non-int line: {s!r}")

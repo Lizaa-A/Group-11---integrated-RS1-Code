@@ -13,63 +13,41 @@ class SeedWeightSim : public rclcpp::Node {
 public:
   SeedWeightSim() : Node("seed_weight_sim")
   {
-    // ---------------------------
-    // Parameters
-    // ---------------------------
-    // Total hopper capacity in grams
+   
     hopper_capacity_g_     = declare_parameter<double>("hopper_capacity_g", 300.0);
-    // Current fill level as a percentage of capacity (0..100)
     level_percent_         = declare_parameter<double>("initial_level_percent", 100.0);
-    // Constant trickle/settling loss (grams per second)
     leak_gps_              = declare_parameter<double>("leak_gps", 0.0);
-    // Threshold (%) at or below which "low" is true
     low_thresh_            = declare_parameter<double>("low_threshold_percent", 15.0);
-    // If true, automatically force outflow to 0 when empty
     stop_when_empty_       = declare_parameter<bool>("stop_when_empty", true);
-    // Republish when level has dropped by at least this many percentage points
     publish_step_percent_  = declare_parameter<double>("publish_step_percent", 5.0);
 
-    // Track previous "low" state to detect threshold crossings
     last_low_state_ = (level_percent_ <= low_thresh_);
 
-    // Status for FSM/dashboard
     fsm_status_pub_ = create_publisher<std_msgs::msg::String>("/mission/fsm_status", 10);
 
-    // ---------------------------
-    // Publishers
-    // ---------------------------
-    // Current level as a rounded percentage
+    
     percent_pub_ = create_publisher<std_msgs::msg::Int32>("/seed_hopper/level_percent", 10);
-    // Current remaining mass in grams
     weight_pub_  = create_publisher<std_msgs::msg::Int32>("/seed_hopper/weight_g", 10);
-    // true if level <= low_thresh_
     low_pub_     = create_publisher<std_msgs::msg::Bool>("/seed_hopper/low", 10);
 
-    // ---------------------------
-    // Subscription (commanded outflow, grams per second)
-    // ---------------------------
-    // Positive numbers mean seeds leaving the hopper (consumption).
-    // Negative values (filling) are clamped to 0 in the integrator.
+    
     flow_sub_ = create_subscription<std_msgs::msg::Int32>(
       "/seed_hopper/outflow_gps", 10,
       [this](std_msgs::msg::Int32::SharedPtr m){ outflow_gps_cmd_ = m->data; });
 
-    // ---------------------------
-    // Service (refill to 100%)
-    // ---------------------------
+  
     refill_srv_ = create_service<std_srvs::srv::Empty>(
       "/seed_hopper/refill",
       [this](const std::shared_ptr<std_srvs::srv::Empty::Request>,
              std::shared_ptr<std_srvs::srv::Empty::Response>) {
         level_percent_   = 100.0;
         was_empty_       = false;
-        last_pub_level_  = std::numeric_limits<double>::quiet_NaN(); // force immediate publish
+        last_pub_level_  = std::numeric_limits<double>::quiet_NaN(); 
         last_low_state_  = (level_percent_ <= low_thresh_);
         RCLCPP_INFO(this->get_logger(), "Hopper refilled to 100%%");
         publish_status("FSM: HOPPER REFILLED");
       });
 
-    // Periodic integration/publish loop at 2 Hz
     last_ = now();
     timer_ = create_wall_timer(std::chrono::milliseconds(500),
                                std::bind(&SeedWeightSim::tick, this));
@@ -83,17 +61,13 @@ private:
     fsm_status_pub_->publish(m);
   }
 
-  // Main periodic update (runs every 0.5s)
   void tick() {
-    // Compute elapsed time since last step
     auto t = now();
     double dt = (t - last_).seconds();
     last_ = t;
 
-    // Determine effective outflow (grams per second)
     int effective_gps = outflow_gps_cmd_;
 
-    // Status ping if low/empty
     if (level_percent_ <= 20.0) {
     }
     if (level_percent_ <= 0.0 && stop_when_empty_) {
@@ -108,20 +82,14 @@ private:
       was_empty_ = false;
     }
 
-    // Integrate mass leaving the hopper:
-    // - Ignore negative commanded outflow (no filling here); clamp at 0
     double out_gps = std::max(0, effective_gps) + leak_gps_;
 
-    // Convert outflow over dt into % drop:
-    // d[%] = (grams_out / capacity_g) * 100
     double dlevel = (out_gps * dt) / hopper_capacity_g_ * 100.0;
     level_percent_ -= dlevel;
 
-    // clamp [0, 100]
     if (level_percent_ < 0.0)  level_percent_ = 0.0;
     if (level_percent_ > 100.) level_percent_ = 100.0;
 
-    // Decide whether to publish this cycle (reduce chatter):
     bool low_now = (level_percent_ <= low_thresh_);
     bool should_pub = false;
     if (std::isnan(last_pub_level_)) {
@@ -162,9 +130,9 @@ private:
 
   // Parameters / state
   double hopper_capacity_g_, level_percent_, leak_gps_, low_thresh_;
-  int    outflow_gps_cmd_{0};      // commanded outflow (grams/sec)
-  bool   stop_when_empty_{true};   // auto-stop outflow at 0% if true
-  bool   was_empty_{false};        // edge-trigger to warn once
+  int    outflow_gps_cmd_{0};      
+  bool   stop_when_empty_{true};   
+  bool   was_empty_{false};        
 
   // Publish gating controls
   double publish_step_percent_{5.0};

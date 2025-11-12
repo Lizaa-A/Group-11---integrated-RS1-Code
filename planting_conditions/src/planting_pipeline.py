@@ -9,7 +9,7 @@ class PlantingPipeline(Node):
     def __init__(self):
         super().__init__('planting_pipeline')
 
-        # Topics (subscribe to completion flags / decisions)
+        # Topics 
         self.goal_received_ = False
         self.ready_to_plant_ = False
         self.rejected_ = False
@@ -26,20 +26,20 @@ class PlantingPipeline(Node):
         self.create_subscription(Bool, '/irrigate/done', self._on_irrigate_done, 10)
         
 
-        # Service clients (Trigger)
+        # Service clients 
         self.soil_prep_cli = self.create_client(Trigger, '/soil_prep/start')
         self.plant_cli     = self.create_client(Trigger, '/plant/start')
         self.cover_cli     = self.create_client(Trigger, '/cover/start')
         self.irrigate_cli  = self.create_client(Trigger, '/irrigate/start')
         self.done_pub = self.create_publisher(Bool, '/mission/planting_done', 10)
         self.status_pub = self.create_publisher(String, '/mission/fsm_status', 10)
-        self._phase = None  # track last published phase to avoid spam
+        self._phase = None  
 
         # Kick off the async pipeline after startup
         self.timer_ = self.create_timer(0.2, self._tick)
         self._started = False
 
-    # ---- Status publishing
+    # Status publishing
     def _set_phase(self, phase: str):
         # Publish status only when phase changes.
         if self._phase != phase:
@@ -50,9 +50,9 @@ class PlantingPipeline(Node):
             self.get_logger().info(f'STATUS is {msg.data}')
 
     def _clear_phase(self):
-        self._phase = None  # nothing published here; next _set_phase will fire
+        self._phase = None  
 
-    # ---- Topic callbacks
+    #Topic callbacks
     def _on_goal_received(self, msg: Bool):
         if msg.data:
             self.get_logger().info('Pipeline: mission goal received.')
@@ -117,14 +117,14 @@ class PlantingPipeline(Node):
         return True
 
     def _tick(self):
-        # if we got a goal AND we’re not already running → start a run
+        # if we got a goal AND we’re not already running 
         if self.goal_received_ and not self.running_:
             self.running_ = True
             asyncio.ensure_future(self._run_pipeline())
 
     async def _run_pipeline(self):
         try:
-            # wait for navigation / mission to confirm goal was actually received
+            # wait for mission to confirm goal was actually received
             await self._wait_for(lambda: self.goal_received_, '/mission/goal_received == true')
 
             # 1) Start soil prep
@@ -168,7 +168,6 @@ class PlantingPipeline(Node):
         except Exception as e:
             self.get_logger().error(f'Pipeline error: {e}')
         finally:
-            # reset so we can do the NEXT goal
             self._reset_flags()
 
     def _reset_flags(self):
@@ -191,7 +190,6 @@ def main():
     loop = asyncio.get_event_loop()
     try:
         executor = rclpy.executors.SingleThreadedExecutor()
-        # integrate rclpy spin with asyncio
         async def spin():
             while rclpy.ok():
                 rclpy.spin_once(node, timeout_sec=0.05)

@@ -44,13 +44,12 @@ def generate_launch_description():
         ('/seed_weight/weight_g',     '/seed_hopper/weight_g'),
         ('/seed_weight/percent_full', '/seed_hopper/level_percent'),
         ('/seed_weight/low',          '/seed_hopper/low'),
-        # If seed_weight listens for outflow, ensure it matches:
         ('/seed_weight/outflow_gps',  '/seed_hopper/outflow_gps'),
     ],
 )
     planting_site_markers = Node(
         package='planting_conditions',
-        executable='planting_site_markers',   # C++ node we added
+        executable='planting_site_markers',   
         name='planting_site_markers',
         output='screen',
         parameters=[{
@@ -84,7 +83,6 @@ def generate_launch_description():
         }],
     )
 
-    # 2) task nodes (idle until orchestrator triggers services)
     soil_prep = Node(
         package='planting_conditions',
         executable='soil_prep_fsm',
@@ -103,7 +101,6 @@ def generate_launch_description():
         }],
     )
     
-    # delayed_soil_prep = TimerAction(period=0.5, actions=[soil_prep])
 
     planting = Node(
         package='planting_conditions',
@@ -116,16 +113,16 @@ def generate_launch_description():
             'seeds_per_run': 10,
             'cmd_vel_topic': cmd_vel_topic,
 
-            'simulate_weight': True,          # publish hopper weight → /seed_hopper/*
-            'initial_seeds': 200,             # starting seed count
-            'seed_mass_g': 0.040,             # mass per seed (for load-cell sim)
-            'empty_holder_g': 120.0,          # holder tare weight
-            'known_weight_g': 1000.0,         # calibration weight
+            'simulate_weight': True,          
+            'initial_seeds': 200,             
+            'seed_mass_g': 0.040,             
+            'empty_holder_g': 120.0,          
+            'known_weight_g': 1000.0,         
             'raw_zero': 0.0,
             'raw_known': 10000.0,
-            'auto_restart': False,            # optional continuous mode
-            'stop_when_empty': True,          # auto-stop when hopper empty
-            'seeds_per_second': -1.0,         # use seeds_per_run/duration unless overridden
+            'auto_restart': False,            
+            'stop_when_empty': True,          
+            'seeds_per_second': -1.0,         
     }],
 )
 
@@ -169,7 +166,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         declare_cmd_vel,
-        sensor_bridge,         # start first
+        sensor_bridge,         
         planting_site_markers,
         water_level_sim,
         seed_weight,
@@ -177,5 +174,5 @@ def generate_launch_description():
         planting,
         cover,
         irrigation,
-        delayed_orchestrator,  # start last, after a short delay
+        delayed_orchestrator,  
     ])

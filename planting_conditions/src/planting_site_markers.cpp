@@ -15,7 +15,6 @@ public:
   PlantingSiteMarkers() : rclcpp::Node("planting_site_markers"),
                           tf_buffer_(this->get_clock()),
                           tf_listener_(tf_buffer_) {
-    // ---- Params ----
     map_frame_       = declare_parameter<std::string>("map_frame", "map");
     base_frame_      = declare_parameter<std::string>("base_frame", "base_link");
     marker_topic_    = declare_parameter<std::string>("marker_topic", "/mission/site_markers");
@@ -30,11 +29,9 @@ public:
     reject_reason_debounce_ms_ = declare_parameter<int>("reject_reason_debounce_ms", 150);
     sun_ok_max_age_s_          = declare_parameter<double>("sun_ok_max_age_s", 1.0); 
 
-    // Publisher (latched)
     auto qos = rclcpp::QoS(1).reliable().transient_local();
     pub_ = create_publisher<visualization_msgs::msg::MarkerArray>(marker_topic_, qos);
 
-    // Subscribe to decisions
     sub_ready_ = create_subscription<std_msgs::msg::Bool>(
       "/soil_prep/ready_to_plant", 10,
       [this](std_msgs::msg::Bool::SharedPtr msg) {
@@ -93,7 +90,6 @@ public:
   }
 
 private:
-  // ---------- TF pose ----------
   bool getRobotPose(geometry_msgs::msg::Pose& out_pose) {
     try {
       auto tf = tf_buffer_.lookupTransform(
@@ -113,7 +109,6 @@ private:
     }
   }
 
-  // ---------- Marker factories ----------
   visualization_msgs::msg::Marker mkHeader(uint32_t id) {
     visualization_msgs::msg::Marker m;
     m.header.frame_id = map_frame_;
@@ -171,7 +166,6 @@ private:
     pub_->publish(arr);
   }
 
-  // ---------- Drop helpers ----------
   void dropGreenCircleAtRobot() {
     geometry_msgs::msg::Pose p;
     if (!getRobotPose(p)) return;
@@ -200,14 +194,12 @@ private:
     RCLCPP_INFO(get_logger(), "Dropped BLUE X at robot pose (soil inadequate).");
   }
 
-  // ---- Params / state ----
   std::string map_frame_, base_frame_, marker_topic_;
   double tf_timeout_s_{0.2};
   bool drop_on_sun_ok_{false};
   double x_size_m_{0.6}, square_size_m_{0.35}, circle_diam_m_{0.5};
   double marker_z_{0.05}, line_width_m_{0.05};
 
-  // Robustness
   int reject_reason_debounce_ms_{150};
   double sun_ok_max_age_s_{1.0};
 

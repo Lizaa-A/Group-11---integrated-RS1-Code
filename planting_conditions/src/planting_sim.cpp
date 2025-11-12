@@ -11,32 +11,26 @@
 class PlantingSim : public rclcpp::Node {
 public:
   PlantingSim() : Node("planting_sim"){
-    // ------------ Core planting params ------------
     plant_duration_s_ = declare_parameter("plant_duration_s", 5.0);
     plant_speed_mps_  = declare_parameter("plant_speed_mps", 0.15);
     seeds_per_run_    = declare_parameter("seeds_per_run", 10);
     cmd_vel_topic_    = declare_parameter<std::string>("cmd_vel_topic", "/cmd_vel");
 
-    // ------------ Seed outflow (for hopper weight) ------------
-    // If >0, use explicit seeds/sec; otherwise derive from seeds_per_run / plant_duration_s
     seeds_per_second_ = declare_parameter("seeds_per_second", -1.0);
-    grams_per_seed_   = declare_parameter("grams_per_seed", 10);   // 40 mg per seed by default
-    stop_on_low_      = declare_parameter("stop_on_low", true);       // pause if hopper low
+    grams_per_seed_   = declare_parameter("grams_per_seed", 10);   // 40 mg per seed 
+    stop_on_low_      = declare_parameter("stop_on_low", true);       
     outflow_topic_    = declare_parameter<std::string>("outflow_topic", "/seed_hopper/outflow_gps");
 
-    // ------------ IO ------------
     done_pub_   = create_publisher<std_msgs::msg::Bool>    ("/plant/done", 10);
     count_pub_  = create_publisher<std_msgs::msg::Int32>   ("/plant/seeds_count", 10);
     strip_pub_  = create_publisher<std_msgs::msg::Float32> ("/plant/strip_length_m", 10);
     cmd_pub_    = create_publisher<geometry_msgs::msg::Twist>(cmd_vel_topic_, 10);
     outflow_pub_= create_publisher<std_msgs::msg::Int32>   (outflow_topic_, 10);
 
-    // optional hopper low pause
     low_sub_ = create_subscription<std_msgs::msg::Bool>(
       "/seed_hopper/low", 10,
       [this](std_msgs::msg::Bool::SharedPtr m){ low_ = m->data; });
 
-    // /plant/start service
     start_srv_ = create_service<std_srvs::srv::Trigger>(
       "/plant/start",
       [this](const std::shared_ptr<std_srvs::srv::Trigger::Request>,
@@ -46,7 +40,6 @@ public:
         start_t_ = now();
         end_t_   = start_t_ + rclcpp::Duration::from_seconds(plant_duration_s_);
 
-        // compute placement rate + outflow gps
         if (seeds_per_second_ > 0.0) {
           seeds_rate_ = seeds_per_second_;
         } else {
@@ -75,7 +68,6 @@ private:
   void tick(){
     if(!active_) return;
 
-    // Pause on low hopper if requested
     if (stop_on_low_ && low_) {
       if (!paused_low_) {
         RCLCPP_WARN(get_logger(),"Hopper low; pausing seeding outflow.");
@@ -83,24 +75,20 @@ private:
       }
       stop_motion();
       set_outflow(0);
-      return; // remain paused until /seed_hopper/low becomes false
+      return; 
     } else if (paused_low_ && !low_) {
       RCLCPP_INFO(get_logger(),"Resuming seeding after refill.");
       paused_low_ = false;
     }
 
-    // Drive forward
     geometry_msgs::msg::Twist tw;
     tw.linear.x = plant_speed_mps_;
     tw.angular.z = 0.0;
     cmd_pub_->publish(tw);
 
-    // Command seed outflow (grams/sec) so hopper weight integrates down
     set_outflow(outflow_gps_cmd_);
 
-    // Finish by time
     if (now() >= end_t_){
-      // stop motion + stop seed flow
       stop_motion();
       set_outflow(0);
       active_ = false;

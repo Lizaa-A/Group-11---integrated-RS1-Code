@@ -18,7 +18,6 @@ enum class State { IDLE, PROBING, EVALUATE, RAKING, DONE, REQUEST_NEXT_GOAL};
 class SoilPrepFSM : public rclcpp::Node {
 public:
   SoilPrepFSM() : rclcpp::Node("soil_prep_fsm") {
-    // ---------------- Parameters ----------------
     raw_accept_thresh_ = declare_parameter<int>("raw_accept_thresh", 400);
     moisture_topic_    = declare_parameter<std::string>("moisture_topic", "/soil/moisture_raw");
 
@@ -32,21 +31,16 @@ public:
     sunlight_required_   = declare_parameter<bool>("sunlight_required", true);
     sunlight_max_age_s_  = declare_parameter<double>("sunlight_max_age_s", 3.0);
 
-    // Wait durations (now configurable)
     sunlight_wait_time_s_ = declare_parameter<double>("sunlight_wait_time_s", 10.0);
     moisture_wait_time_s_ = declare_parameter<double>("moisture_wait_time_s", 10.0);
 
-    // Freshness for moisture (existing)
     max_age_s_ = declare_parameter<double>("moisture_max_age_s", max_age_s_);
 
     // Publish request for next goal:
     permit_next_pub_ = create_publisher<std_msgs::msg::Empty>("/mission/permit_next", 10);
-    // Publish to status
     fsm_status_pub_ = create_publisher<std_msgs::msg::String>("/mission/fsm_status", 10);
-    // Publish to next goal
     done_pub_ = create_publisher<std_msgs::msg::Bool>("/mission/planting_done", 10);
 
-    // ---------------- Subscriptions ----------------
     moisture_sub_ = create_subscription<std_msgs::msg::Int32>(
       moisture_topic_, 10,
       [this](const std_msgs::msg::Int32::SharedPtr m){
@@ -103,7 +97,6 @@ public:
   }
 
 private:
-  // ---------------- Core tick ----------------
   void publish_status(const std::string& s)
   {
     std_msgs::msg::String m;
@@ -136,14 +129,11 @@ private:
 
           const double sun_elapsed = (t - sunlight_probe_start_).seconds();
           if (sun_elapsed < sunlight_wait_time_s_) {
-            // Keep waiting for the pre-check delay to elapse
             break;
           }
 
-          // Time to evaluate sunlight freshness + value
           const double sun_age = (t - last_sunlight_stamp_).seconds();
           if (sun_age > sunlight_max_age_s_) {
-            // stale sunlight → restart the sunlight wait
             sunlight_probe_start_ = t;
             RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 3000,
                                  "Sunlight sample is stale (age=%.2fs > %.2fs); re-waiting...",
@@ -163,18 +153,15 @@ private:
             break;
           }
 
-          // Sunlight passed
           if (!sunlight_checked_ok_) {
             sunlight_checked_ok_ = true;
             std_msgs::msg::Bool sb; sb.data = false; sun_block_pub_->publish(sb);
             RCLCPP_INFO(get_logger(), "Sunlight OK → proceeding to moisture gate.");
           }
         } else {
-          // not required; treat as passed
           if (!sunlight_checked_ok_) sunlight_checked_ok_ = true;
         }
 
-        // ----- Moisture gate next -----
         if (!have_moisture_) {
           RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 2000,
                                "Waiting for first moisture sample on %s ...", moisture_topic_.c_str());
@@ -250,12 +237,6 @@ private:
       }
 
       case State::RAKING: {
-        // need to say raking state here:
-        // static bool sent = false;              // (or make it a member: request_sent_)
-        // if (!sent) {
-        //   publish_status("FSM: RAKING");
-        //   sent = true;
-        // }
         if (!rake_started_) {
           rake_started_ = true;
           rake_segment_end_ = t + rclcpp::Duration::from_seconds(rake_seg_time_s_);
@@ -295,14 +276,12 @@ private:
         break;
 
       case State::REQUEST_NEXT_GOAL:
-        // static bool sent = false;              // (or make it a member: request_sent_)
         if (!request_sent_) {
           publish_status("FSM: REQUESTING NEXT GOAL");
           std_msgs::msg::Empty msg;
           permit_next_pub_->publish(msg);
           request_sent_ = true;
         }
-        // using done_pub_
         std_msgs::msg::Bool done_msg;
         done_msg.data = true;
         done_pub_->publish(done_msg);
@@ -333,7 +312,6 @@ private:
     probe_start_time_set_ = false;
   }
 
-  // ---------------- Parameters ----------------
   int    raw_accept_thresh_{400};
   double max_age_s_{3.0};           // freshness for moisture
   double rake_speed_{0.2};
@@ -351,7 +329,6 @@ private:
   // Moisture wait param
   double moisture_wait_time_s_{10.0};
 
-  // ---------------- State/timing ----------------
   State state_{State::IDLE};
 
   // Moisture

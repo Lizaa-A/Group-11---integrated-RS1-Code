@@ -8,9 +8,7 @@ class TelemetryNode(Node):
     def __init__(self):
         super().__init__('telemetry_node')
 
-        # -----------------------------
-        # Telemetry dictionary
-        # -----------------------------
+
         self.telemetry_data = {
             "task_status": "Idle",
             "soil_moisture": {"raw": 0},
@@ -24,38 +22,23 @@ class TelemetryNode(Node):
             }
         }
 
-        # -----------------------------
-        # Publisher
-        # -----------------------------
         self.pub = self.create_publisher(String, '/telemetry/snapshot', 10)
 
-        # -----------------------------
-        # Subscribers (real sensor topics)
-        # -----------------------------
-        # Each callback updates telemetry and republishes the JSON snapshot
         self.create_subscription(Int32, '/soil/moisture_raw', self.soil_callback, 10)
         self.create_subscription(Bool,  '/sunlight/ok',       self.sunlight_callback, 10)
 
         self.create_subscription(Int32, '/water_tank/level_percent', self.water_level_callback, 10)
         self.create_subscription(Int32, '/water_tank/volume_l',      self.water_volume_callback, 10)
-        # FIX: listen to the correct low topic from WaterLevelSim
         self.create_subscription(Bool,  '/water_tank/low',           self.water_low_callback, 10)
 
         self.create_subscription(String, '/mission/fsm_status', self.status_callback, 10)
 
-        # -----------------------------
-        # Seed weight / hopper topics (match hopper simulator)
-        # -----------------------------
         self.create_subscription(Int32, '/seed_hopper/weight_g',      self.seed_weight_callback, 10)
         self.create_subscription(Int32, '/seed_hopper/level_percent', self.seed_percent_callback, 10)
         self.create_subscription(Bool,  '/seed_hopper/low',           self.seed_low_callback, 10)
-        # NOTE: no /seed_hopper/empty topic — we derive it from percent_full
 
         self.get_logger().info("Telemetry node initialized and waiting for sensor data...")
 
-    # -----------------------------
-    # Callbacks
-    # -----------------------------
     def soil_callback(self, msg: Int32):
         self.telemetry_data["soil_moisture"]["raw"] = int(msg.data)
         self.publish_telemetry()
@@ -80,7 +63,6 @@ class TelemetryNode(Node):
         self.telemetry_data["task_status"] = msg.data
         self.publish_telemetry()
 
-    # ---- Seed hopper callbacks ----
     def seed_weight_callback(self, msg: Int32):
         self.telemetry_data["seed_hopper"]["weight_g"] = int(msg.data)
         self.publish_telemetry()
@@ -88,7 +70,6 @@ class TelemetryNode(Node):
     def seed_percent_callback(self, msg: Int32):
         pct = int(msg.data)
         self.telemetry_data["seed_hopper"]["percent_full"] = pct
-        # Derive 'empty' locally (no dedicated topic)
         self.telemetry_data["seed_hopper"]["empty"] = (pct <= 0)
         self.publish_telemetry()
 
@@ -96,14 +77,10 @@ class TelemetryNode(Node):
         self.telemetry_data["seed_hopper"]["low"] = bool(msg.data)
         self.publish_telemetry()
 
-    # -----------------------------
-    # Publish Telemetry Snapshot
-    # -----------------------------
     def publish_telemetry(self):
         msg = String()
         msg.data = json.dumps(self.telemetry_data)
         self.pub.publish(msg)
-        # Comment out next line if it's too chatty:
         self.get_logger().info(f"Published telemetry: {msg.data}")
 
 def main(args=None):
